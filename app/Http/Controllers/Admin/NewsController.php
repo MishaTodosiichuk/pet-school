@@ -90,7 +90,7 @@ class NewsController extends Controller
         $this->crudMenuAction->destroy($news);
 
         return redirect()->route('admin.news.index')
-            ->with('success', 'Новиву успішно видалено!');
+            ->with('success', 'Новину успішно видалено!');
     }
 
     public function updatePublish(UpdatePublishRequest $request, News $news)

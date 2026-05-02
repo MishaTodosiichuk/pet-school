@@ -3,6 +3,7 @@
 namespace Tests\Feature\Admin;
 
 use App\Models\Menu;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 
@@ -10,13 +11,22 @@ class MenuControllerTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected User $admin;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->admin = User::factory()->create();
+    }
+
     public function testIndexPageIsDisplayed(): void
     {
         Menu::factory()->create([
             'title' => 'Головне меню',
         ]);
 
-        $response = $this->get(route('admin.menus.index'));
+        $response = $this->actingAs($this->admin)->get(route('admin.menus.index'));
 
         $response->assertOk();
         $response->assertViewIs('admin.pages.menu.index');
@@ -25,7 +35,7 @@ class MenuControllerTest extends TestCase
 
     public function testCreatePageIsDisplayed(): void
     {
-        $response = $this->get(route('admin.menus.create'));
+        $response = $this->actingAs($this->admin)->get(route('admin.menus.create'));
 
         $response->assertOk();
         $response->assertViewIs('admin.pages.menu.create');
@@ -34,7 +44,7 @@ class MenuControllerTest extends TestCase
 
     public function testMenuCanBeCreated(): void
     {
-        $response = $this->post(route('admin.menus.store'), [
+        $response = $this->actingAs($this->admin)->post(route('admin.menus.store'), [
             'title' => 'Footer menu',
             'slug' => '',
             'parent_id' => null,
@@ -59,7 +69,7 @@ class MenuControllerTest extends TestCase
             'publish' => true,
         ]);
 
-        $response = $this->patch(route('admin.menus.update', $menu->id), [
+        $response = $this->actingAs($this->admin)->patch(route('admin.menus.update', $menu->id), [
             'title' => 'New title',
             'slug' => 'new-title',
             'parent_id' => null,
@@ -81,7 +91,7 @@ class MenuControllerTest extends TestCase
     {
         $menu = Menu::factory()->create();
 
-        $response = $this->delete(route('admin.menus.destroy', $menu));
+        $response = $this->actingAs($this->admin)->delete(route('admin.menus.destroy', $menu));
 
         $response->assertRedirect(route('admin.menus.index'));
 
@@ -96,7 +106,7 @@ class MenuControllerTest extends TestCase
             'publish' => false,
         ]);
 
-        $response = $this->post(route('admin.menus.publish', $menu), [
+        $response = $this->actingAs($this->admin)->post(route('admin.menus.publish', $menu), [
             'publish' => true,
         ]);
 
@@ -118,7 +128,7 @@ class MenuControllerTest extends TestCase
             'title' => 'Footer menu',
         ]);
 
-        $response = $this->get(route('admin.menus.index', [
+        $response = $this->actingAs($this->admin)->get(route('admin.menus.index', [
             'query' => 'Header',
         ]));
 

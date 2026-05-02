@@ -1,11 +1,7 @@
-import { createApp } from 'vue'
-import App from './App.vue'
+import './bootstrap';
 
-import ElementPlus from 'element-plus'
-import 'element-plus/dist/index.css'
+import Alpine from 'alpinejs';
 
-const app = createApp(App)
+window.Alpine = Alpine;
 
-app.use(ElementPlus)
-
-app.mount('#app')
+Alpine.start();

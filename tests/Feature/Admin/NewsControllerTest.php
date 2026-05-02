@@ -3,6 +3,7 @@
 namespace Tests\Feature\Admin;
 
 use App\Models\News;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
 use App\Models\Image;
@@ -13,13 +14,22 @@ class NewsControllerTest extends TestCase
 {
     use RefreshDatabase;
 
+    protected User $admin;
+
+    protected function setUp(): void
+    {
+        parent::setUp();
+
+        $this->admin = User::factory()->create();
+    }
+
     public function testIndexPageIsDisplayed(): void
     {
         News::factory()->create([
             'title' => 'Головне меню',
         ]);
 
-        $response = $this->get(route('admin.news.index'));
+        $response = $this->actingAs($this->admin)->get(route('admin.news.index'));
 
         $response->assertOk();
         $response->assertViewIs('admin.pages.news.index');
@@ -28,7 +38,7 @@ class NewsControllerTest extends TestCase
 
     public function testCreatePageIsDisplayed(): void
     {
-        $response = $this->get(route('admin.news.create'));
+        $response = $this->actingAs($this->admin)->get(route('admin.news.create'));
 
         $response->assertOk();
         $response->assertViewIs('admin.pages.news.create');
@@ -38,7 +48,7 @@ class NewsControllerTest extends TestCase
     public function testNewsCanBeCreated(): void
     {
 
-        $response = $this->post(route('admin.news.store'), [
+        $response = $this->actingAs($this->admin)->post(route('admin.news.store'), [
             'title' => 'Footer news',
             'slug' => '',
             'description' => 'Test description',
@@ -64,7 +74,7 @@ class NewsControllerTest extends TestCase
             'publish' => true,
         ]);
 
-        $response = $this->patch(route('admin.news.update', $news->id), [
+        $response = $this->actingAs($this->admin)->patch(route('admin.news.update', $news->id), [
             'title' => 'New title',
             'slug' => 'new-title',
             'description' => 'Test news description',
@@ -87,7 +97,7 @@ class NewsControllerTest extends TestCase
     {
         $news = News::factory()->create();
 
-        $response = $this->delete(route('admin.news.destroy', $news));
+        $response = $this->actingAs($this->admin)->delete(route('admin.news.destroy', $news));
 
         $response->assertRedirect(route('admin.news.index'));
 
@@ -102,7 +112,7 @@ class NewsControllerTest extends TestCase
             'publish' => false,
         ]);
 
-        $response = $this->post(route('admin.news.publish', $news), [
+        $response = $this->actingAs($this->admin)->post(route('admin.news.publish', $news), [
             'publish' => true,
         ]);
 
@@ -124,7 +134,7 @@ class NewsControllerTest extends TestCase
             'title' => 'Footer news',
         ]);
 
-        $response = $this->get(route('admin.news.index', [
+        $response = $this->actingAs($this->admin)->get(route('admin.news.index', [
             'query' => 'Header',
         ]));
 
@@ -141,7 +151,7 @@ class NewsControllerTest extends TestCase
 
         $file = UploadedFile::fake()->image('news.jpg');
 
-        $response = $this->post(route('admin.news.store'), [
+        $response = $this->actingAs($this->admin)->post(route('admin.news.store'), [
             'title' => 'News with image',
             'slug' => '',
             'description' => 'Test description',
@@ -187,7 +197,7 @@ class NewsControllerTest extends TestCase
 
         $file = UploadedFile::fake()->image('updated.jpg');
 
-        $response = $this->patch(route('admin.news.update', $news->id), [
+        $response = $this->actingAs($this->admin)->patch(route('admin.news.update', $news->id), [
             'title' => 'Updated news',
             'slug' => 'updated-news',
             'description' => 'Updated description',
@@ -225,7 +235,7 @@ class NewsControllerTest extends TestCase
             'size' => 100,
         ]);
 
-        $response = $this->post(route('admin.news.store'), [
+        $response = $this->actingAs($this->admin)->post(route('admin.news.store'), [
             'title' => 'News with existing image',
             'slug' => '',
             'description' => 'Test description',

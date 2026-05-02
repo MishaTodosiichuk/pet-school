@@ -5,7 +5,7 @@ use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\NewsController;
 use Illuminate\Support\Facades\Route;
 
-Route::prefix('admin')->name('admin.')->group(function () {
+Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::get('/', [AdminController::class, 'index'])->name('home');
 
     Route::post('menus/{menu}/publish', [MenuController::class, 'updatePublish'])->name('menus.publish');

@@ -16,6 +16,13 @@
                         </a>
                     </li>
                 @endforeach
+                    <form class="nav-item logout-form" method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="nav-link logout-button">
+                            <i class="nav-icon fas fa-sign-out-alt"></i>
+                            <p>Вийти</p>
+                        </button>
+                    </form>
             </ul>
         </nav>
     </div>

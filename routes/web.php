@@ -6,5 +6,5 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-
-include('admin/web.php');
+require __DIR__.'/auth.php';
+require __DIR__.'/admin/web.php';

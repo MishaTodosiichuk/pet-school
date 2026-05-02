@@ -2,10 +2,13 @@
 
 namespace App\Managers;
 use App\Actions\CrudActions;
+use App\Traits\Managers\HasRelationFieldsTrait;
 use Illuminate\Database\Eloquent\Model;
 
 abstract class BaseIntegrateManager
 {
+    use HasRelationFieldsTrait;
+
     abstract public function getModuleName(): string;
 
     abstract public function getModuleTitle(): string;
@@ -114,6 +117,7 @@ abstract class BaseIntegrateManager
         return [
             'columns' => $this->getTableColumns(),
             'routes' => [
+                'index'   => route("admin.{$module}.index"),
                 'create'  => route("admin.{$module}.create"),
                 'edit'    => "admin.{$module}.edit",
                 'destroy' => "admin.{$module}.destroy",

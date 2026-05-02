@@ -2,37 +2,38 @@
 
 namespace App\Managers;
 
-use App\Models\Menu;
+use App\Models\News;
 use Illuminate\Database\Eloquent\Model;
 
-class IntegrateManagerMenu extends BaseIntegrateManager
+class IntegrateManagerNews extends BaseIntegrateManager
 {
     public function getModuleName(): string
     {
-        return 'menus';
+        return 'news';
     }
 
     public function getModuleTitle(): string
     {
-        return 'Меню';
+        return 'Новини';
     }
 
     public function getModuleIcon(): string
     {
-        return 'fas fa-bars';
+        return 'far fa-newspaper';
     }
 
     public function getModelClass(): string
     {
-        return Menu::class;
+        return News::class;
     }
 
     protected function getTableColumns(): array
     {
         return [
-            'id'      => ['label' => 'ID', 'class' => 'text-center', 'type' => 'id'],
-            'title'   => ['label' => 'Назва', 'class' => ''],
-            'publish' => ['label' => 'Опублікований', 'class' => 'text-center', 'type' => 'switch'],
+            'id'            => ['label' => 'ID', 'class' => 'text-center', 'type' => 'id'],
+            'title'         => ['label' => 'Назва', 'class' => ''],
+            'description'   => ['label' => 'Опис', 'class' => ''],
+            'publish'       => ['label' => 'Опублікований', 'class' => 'text-center', 'type' => 'switch'],
         ];
     }
 
@@ -48,7 +49,6 @@ class IntegrateManagerMenu extends BaseIntegrateManager
                 'column' => 'main',
                 'value' => old('title', $model?->title),
             ],
-
             'slug' => [
                 'type' => 'string',
                 'label' => 'Слаг',
@@ -56,15 +56,20 @@ class IntegrateManagerMenu extends BaseIntegrateManager
                 'column' => 'main',
                 'value' => old('slug', $model?->slug),
             ],
-
-            'parent_id' => $this->getRelationField($model, 'parent', 'Батьківський елемент'),
-
+            'description' => [
+                'type' => 'text',
+                'label' => 'Опис',
+                'placeholder' => 'Введіть опис',
+                'column' => 'main',
+                'value' => old('description', $model?->description),
+            ],
             'publish' => [
                 'type' => 'switch',
                 'label' => 'Опублікувати',
                 'column' => 'side',
                 'value' => old('publish', $model ? $model->publish : true),
             ],
+            'images' => $this->getRelationField($model, 'images', 'Галерея', 'alt', 'images','main'),
         ];
     }
 }

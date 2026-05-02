@@ -1,7 +1,11 @@
 <?php
 
+use App\Managers\IntegrateManagerMenu;
+use App\Managers\IntegrateManagerNews;
+
 return [
     'modules' => [
-        \App\Managers\IntegrateManagerMenu::class,
+        IntegrateManagerMenu::class,
+        IntegrateManagerNews::class,
         ]
     ];

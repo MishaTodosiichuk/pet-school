@@ -4,6 +4,9 @@
     $routes = $config['routes'];
     $columns = $config['columns'];
     $search = $config['search'];
+
+    $serviceWidth = '80px';
+    $actionsWidth = '100px';
 @endphp
 
 @include('admin.includes.action-notification')
@@ -29,21 +32,30 @@
     </div>
 
     <div class="card-body p-0">
-        <table class="table table-head-fixed text-nowrap">
+        <table class="table table-head-fixed text-nowrap" style="table-layout: fixed; width: 100%;">
             <thead>
             <tr>
-                @foreach($columns as $column)
-                    <th class="{{ $column['class'] ?? '' }}">{{ $column['label'] }}</th>
+                @foreach($columns as $key => $column)
+                    @php
+                        $width = 'auto';
+                        if ($key === 'id' || $key === 'publish') {
+                            $width = $serviceWidth;
+                        }
+                    @endphp
+                    <th class="{{ $column['class'] ?? '' }}" style="width: {{ $width }};">
+                        {{ $column['label'] }}
+                    </th>
                 @endforeach
-                <th class="text-center">Змінити</th>
-                <th class="text-center">Видалити</th>
+                <th class="text-center" style="width: {{ $actionsWidth }};">Змінити</th>
+                <th class="text-center" style="width: {{ $actionsWidth }};">Видалити</th>
             </tr>
             </thead>
             <tbody>
             @foreach($items as $action)
                 <tr>
                     @foreach($columns as $key => $column)
-                        <td class="{{ $column['class'] ?? '' }}">
+                        <td class="{{ $column['class'] ?? '' }}"
+                            style="overflow: hidden; text-overflow: ellipsis; white-space: nowrap;">
                             @if($key === 'publish')
                                 @include('admin.includes.buttons.actions.publish')
                             @elseif(isset($column['type']) && $column['type'] === 'id')
@@ -82,7 +94,7 @@
                 const $checkbox = $(this);
                 const id = $checkbox.data('id');
                 const isPublished = $checkbox.prop('checked') ? 1 : 0;
-                const url = `/admin/menus/${id}/publish`;
+                const url = `{{ $routes['index'] }}/${id}/publish`;
 
                 $.ajax({
                     url: url,

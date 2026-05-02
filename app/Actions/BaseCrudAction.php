@@ -2,13 +2,13 @@
 
 namespace App\Actions;
 
-use App\Contracts\BaseCrudInterface;
+use App\Contracts\BaseCrudContract;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\RedirectResponse;
 
-class BaseCrudAction implements BaseCrudInterface
+class BaseCrudAction implements BaseCrudContract
 {
     protected string $routePrefix;
     protected string $modelClass;
@@ -36,15 +36,26 @@ class BaseCrudAction implements BaseCrudInterface
 
     public function store(array $data): Model
     {
+        $originalData = $data;
+
         $data = $this->processData($data);
 
-        return (new $this->modelClass)->newQuery()->create($data);
+        $model = (new $this->modelClass)->newQuery()->create($data);
+
+        $this->afterStore($model, $originalData);
+
+        return $model;
     }
 
     public function update(Model $model, array $data): Model
     {
+        $originalData = $data;
+
         $data = $this->processData($data);
+
         $model->update($data);
+
+        $this->afterUpdate($model, $originalData);
 
         return $model->fresh();
     }
@@ -81,5 +92,13 @@ class BaseCrudAction implements BaseCrudInterface
     protected function processData(array $data): array
     {
         return $data;
+    }
+
+    protected function afterStore(Model $model, array $data): void
+    {
+    }
+
+    protected function afterUpdate(Model $model, array $data): void
+    {
     }
 }

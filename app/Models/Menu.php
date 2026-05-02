@@ -23,4 +23,14 @@ class Menu extends Model
     protected $casts = [
         'publish' => 'boolean',
     ];
+
+    public function parent(): \Illuminate\Database\Eloquent\Relations\BelongsTo
+    {
+        return $this->belongsTo(self::class, 'parent_id');
+    }
+
+    public function children()
+    {
+        return $this->hasMany(self::class, 'parent_id');
+    }
 }

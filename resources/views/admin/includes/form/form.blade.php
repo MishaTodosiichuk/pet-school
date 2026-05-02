@@ -1,6 +1,6 @@
 @include('admin.includes.action-notification')
 
-<form action="{{ $formConfig['action'] }}" method="post">
+<form action="{{ $formConfig['action'] }}" method="post" enctype="multipart/form-data">
     @csrf
     @if($formConfig['method'] === 'patch')
         @method('PATCH')
@@ -12,7 +12,9 @@
                 <div class="card-body">
                     @foreach($formConfig['fields'] as $name => $field)
                         @if(($field['column'] ?? 'main') === 'main')
-                            @include('admin.includes.buttons.form.render-field', ['name' => $name, 'field' => $field])
+                            @includeIf("admin.includes.form.fields." . $field['type'], array_merge([
+                                'name' => $name,
+                            ], $field))
                         @endif
                     @endforeach
                     @include('admin.includes.buttons.form.all-buttons')
@@ -25,7 +27,9 @@
                 <div class="card-body">
                     @foreach($formConfig['fields'] as $name => $field)
                         @if(($field['column'] ?? 'main') === 'side')
-                            @include('admin.includes.buttons.form.render-field', ['name' => $name, 'field' => $field])
+                            @includeIf("admin.includes.form.fields." . $field['type'], array_merge([
+                                'name' => $name,
+                            ], $field))
                         @endif
                     @endforeach
                 </div>

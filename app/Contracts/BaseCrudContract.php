@@ -7,7 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Contracts\Pagination\LengthAwarePaginator;
 use Illuminate\Http\RedirectResponse;
 
-interface BaseCrudInterface
+interface BaseCrudContract
 {
     public function index(string $search) :LengthAwarePaginator;
 

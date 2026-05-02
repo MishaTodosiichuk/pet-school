@@ -5,5 +5,5 @@
 @endsection
 
 @section('content')
-    @include('admin.includes.buttons.form.form')
+    @include('admin.includes.form.form')
 @endsection

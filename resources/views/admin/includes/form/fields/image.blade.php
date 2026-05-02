@@ -13,6 +13,7 @@
             <div class="col-12">
                 <img src="{{ asset($field['value']) }}"
                      class="img-thumbnail w-100"
+                     alt=""
                      style="height: 150px; object-fit: cover;">
             </div>
         @endif

@@ -163,7 +163,7 @@
                     let template = `
                 <div class="col-md-2 col-sm-4 mb-2 new-image-preview">
                     <div class="position-relative">
-                        <img src="${event.target.result}" class="img-thumbnail" style="width: 100%; height: 120px; object-fit: cover;">
+                        <img src="${event.target.result}" alt="" class="img-thumbnail" style="width: 100%; height: 120px; object-fit: cover;">
                         <button type="button" class="btn btn-danger btn-sm position-absolute" style="top: 5px; right: 5px;" onclick="this.parentElement.parentElement.remove()">
                             &times;
                         </button>
@@ -196,6 +196,7 @@
                         <div class="position-relative shadow-sm border rounded p-1" style="background: #fff;">
                             <img src="${e.target.result}"
                                  class="img-thumbnail border-0"
+                                 alt=""
                                  style="height: ${imgHeight}; width: 100%; object-fit: cover; display: block;">
                             <span class="badge badge-danger position-absolute remove-file"
                                   style="top: -10px; right: -10px; cursor: pointer; z-index: 10; padding: 5px 8px; border-radius: 50%;">

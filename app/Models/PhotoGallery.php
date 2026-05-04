@@ -19,6 +19,11 @@ class PhotoGallery extends Model
         'publish' => 'boolean',
     ];
 
+    public function scopePublished($query)
+    {
+        return $query->where('publish', 1);
+    }
+
     public function images(): BelongsToMany
     {
         return $this->belongsToMany(Image::class, 'photo_galleries_image')
@@ -27,8 +32,8 @@ class PhotoGallery extends Model
             ->orderByPivot('sort_order', 'asc');
     }
 
-    public static function getByKey(string $key)
+    public static function scopeByKey($query, string $key)
     {
-        return self::where('key', $key)->with('images')->first();
+        return $query->where('key', $key);
     }
 }

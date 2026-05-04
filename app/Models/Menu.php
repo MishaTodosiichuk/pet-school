@@ -24,6 +24,11 @@ class Menu extends Model
         'publish' => 'boolean',
     ];
 
+    public function scopePublished($query)
+    {
+        return $query->where('publish', 1);
+    }
+
     public function parent(): \Illuminate\Database\Eloquent\Relations\BelongsTo
     {
         return $this->belongsTo(self::class, 'parent_id');

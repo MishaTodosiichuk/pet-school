@@ -26,6 +26,11 @@ class News extends Model
         'publish' => 'boolean',
     ];
 
+    public function scopePublished($query)
+    {
+        return $query->where('publish', 1);
+    }
+
     public function images(): BelongsToMany
     {
         return $this->belongsToMany(Image::class, 'image_news');

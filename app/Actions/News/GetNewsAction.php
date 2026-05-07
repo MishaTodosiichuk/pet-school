@@ -12,7 +12,7 @@ class GetNewsAction
     {
         $news = News::query()
             ->published()
-            ->get();
+            ->paginate(10);
 
         return NewsResource::collection($news);
     }

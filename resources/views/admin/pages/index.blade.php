@@ -21,7 +21,7 @@
         <div class="col-lg-3 col-6">
             <div class="small-box bg-success">
                 <div class="inner">
-                    <h3>53<sup style="font-size: 20px">%</sup></h3>
+                    <h3>53<sup style="font-size: 1.25rem">%</sup></h3>
                     <p>Bounce Rate</p>
                 </div>
                 <div class="icon">

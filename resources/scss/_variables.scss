@@ -1,0 +1,76 @@
+// =====================
+// 🅰️ Fonts
+// =====================
+$font-main: 'Instrument Sans', sans-serif;
+$font-heading: 'Poppins', sans-serif;
+
+// =====================
+// 🎨 Colors
+// =====================
+$color-primary: #0d61a2;      // синій
+$color-deep-primary: #2D4959FF; // глибокий синій
+$color-secondary: #10b981;    // зелений
+$color-accent: #f59e0b;       // жовтий
+
+$color-black: #111827;
+$color-white: #ffffff;
+
+$color-gray-100: #f3f4f6;
+$color-gray-200: #e5e7eb;
+$color-gray-300: #d1d5db;
+$color-gray-400: #9ca3af;
+$color-gray-500: #6b7280;
+$color-gray-600: #4b5563;
+$color-gray-700: #374151;
+
+// =====================
+// 🔤 Typography
+// =====================
+$font-size-xs: 0.75rem;    // 12px
+$font-size-sm: 0.875rem;   // 14px
+$font-size-md: 1rem;       // 16px
+$font-size-lg: 1.125rem;   // 18px
+$font-size-xl: 1.25rem;    // 20px
+$font-size-2xl: 1.5rem;    // 24px
+$font-size-3xl: 2rem;      // 32px
+
+$line-height-base: 1.5;
+$line-height-heading: 1.2;
+
+// =====================
+// 📏 Spacing
+// =====================
+$space-1: 4px;
+$space-2: 8px;
+$space-3: 12px;
+$space-4: 16px;
+$space-5: 20px;
+$space-6: 24px;
+$space-7: 28px;
+$space-8: 32px;
+$space-9: 36px;
+$space-10: 40px;
+$space-20: 80px;
+
+// =====================
+// 🔘 Border radius
+// =====================
+$radius-sm: 4px;
+$radius-md: 8px;
+$radius-lg: 16px;
+
+// =====================
+// 🌑 Shadows
+// =====================
+$shadow-sm: 0 1px 2px rgba(0,0,0,0.05);
+$shadow-md: 0 4px 6px rgba(0,0,0,0.1);
+$shadow-lg: 0 10px 15px rgba(0,0,0,0.15);
+
+// =====================
+// 📱 Breakpoints
+// =====================
+$breakpoint-sm: 640px;
+$breakpoint-md: 768px;
+$breakpoint-lg: 1024px;
+$breakpoint-xl: 1280px;
+

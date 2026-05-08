@@ -1,27 +1,20 @@
-<script setup>
+<script setup lang="ts">
 import {computed} from 'vue'
 
-const props = defineProps({
-    size: {
-        type: [Number, String],
-        default: 32
-    },
-    bg: {
-        type: String,
-        default: '#000'
-    },
-    pathFill: {
-        type: String,
-        default: '#f59e0b'
-    },
-    alignItems: {
-        type: String,
-        default: 'center'
-    },
-    justifyContent: {
-        type: String,
-        default: 'space-around'
-    }
+interface Props {
+    size?: number | string
+    bg?: string
+    pathFill?: string
+    alignItems?: string
+    justifyContent?: string
+}
+
+const props = withDefaults(defineProps<Props>(), {
+    size: 32,
+    bg: '#000',
+    pathFill: '#f59e0b',
+    alignItems: 'center',
+    justifyContent: 'space-around'
 })
 
 const gradientId = `nz-gradient-${Math.random().toString(36).slice(2)}`
@@ -30,6 +23,10 @@ const iconStyles = computed(() => ({
     width: `${props.size}px`,
     height: `${props.size}px`,
     '--nz-gradient': `url(#${gradientId})`
+}))
+
+const fontSizeStyle = computed(() => ({
+    fontSize: `${Number(props.size) - 2}px`
 }))
 </script>
 
@@ -45,7 +42,7 @@ const iconStyles = computed(() => ({
         >
             <i
                 class="fab fa-instagram"
-                :style="{ fontSize: `${props.size - 2}px` }"
+                :style="fontSizeStyle"
             ></i>
         </a>
 
@@ -56,7 +53,7 @@ const iconStyles = computed(() => ({
         >
             <i
                 class="fab fa-facebook"
-                :style="{ fontSize: `${props.size - 2}px` }"
+                :style="fontSizeStyle"
             ></i>
         </a>
 
@@ -81,7 +78,7 @@ const iconStyles = computed(() => ({
                             y2="38.5508"
                             gradientUnits="userSpaceOnUse"
                         >
-                            <stop stop-color="#1A76FF"/>
+                            <stop stop-color="#1A76FF" offset=""/>
                             <stop offset="1" stop-color="#FFEA96"/>
                         </linearGradient>
                     </defs>
@@ -91,13 +88,13 @@ const iconStyles = computed(() => ({
                         width="40"
                         height="40"
                         rx="12"
-                        :style="{ fill: props.bg }"
+                        :style="{ fill: bg }"
                     />
 
                     <path
                         class="icon-path"
                         d="M28.5958 21.1585L29.8709 21.9202C29.9496 21.9671 30.0147 22.0335 30.0599 22.1129C30.1051 22.1924 30.1289 22.2821 30.1289 22.3734C30.1289 22.4647 30.1051 22.5545 30.0599 22.6339C30.0147 22.7133 29.9496 22.7797 29.8709 22.8266L20.0209 28.7123L10.1708 22.8266C10.0921 22.7797 10.027 22.7133 9.98182 22.6339C9.93661 22.5545 9.91284 22.4647 9.91284 22.3734V17.4608C9.91284 17.3695 9.93661 17.2798 9.98182 17.2003C10.027 17.1209 10.0921 17.0545 10.1708 17.0076L19.4745 11.4484C19.6395 11.3497 19.8284 11.2975 20.0209 11.2975C20.2134 11.2975 20.4022 11.3497 20.5672 11.4484H20.5662L29.8709 17.0076C29.9496 17.0545 30.0147 17.1209 30.0599 17.2003C30.1051 17.2798 30.1289 17.3695 30.1289 17.4608C30.1289 17.5521 30.1051 17.6419 30.0599 17.7213C30.0147 17.8007 29.9496 17.8671 29.8709 17.914L20.0209 23.7997L11.7678 18.8683V21.3508L20.0209 26.2824L28.5958 21.1585Z"
-                        :style="{ fill: props.pathFill }"
+                        :style="{ fill: pathFill }"
                     />
                 </svg>
             </div>

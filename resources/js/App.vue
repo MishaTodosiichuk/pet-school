@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import TheHeader from "@/components/layouts/TheHeader.vue";
 import TheSidebar from "@/components/layouts/TheSidebar.vue";
 import TheMainContent from "@/components/layouts/TheMainContent.vue";
@@ -6,7 +6,7 @@ import TheFooter from "@/components/layouts/TheFooter.vue";
 import BackToTop from "@/components/BackToTop.vue";
 import FixedMainMenu from "@/components/Modals/FixedMainMenu.vue";
 import SideMenuModal from "@/components/Modals/SideMenuModal.vue";
-import AccessibilityPanel from "@/components/layouts/AccessibilityPanel.vue";
+import Loader from "@/components/Loader.vue";
 </script>
 
 <template>
@@ -19,6 +19,7 @@ import AccessibilityPanel from "@/components/layouts/AccessibilityPanel.vue";
                 <TheMainContent/>
                 <FixedMainMenu/>
                 <SideMenuModal/>
+                <Loader />
             </div>
         </div>
         <BackToTop/>

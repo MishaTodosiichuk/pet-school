@@ -1,8 +1,8 @@
-<script setup>
-import MenuItem from "./MenuItem.vue";
+<script setup lang="ts">
+import MenuItemCard from "@/components/Sidebar/Menu/MenuItemCard.vue";
 
 import {onMounted} from "vue";
-import {useMenuStore} from "@/stores/menu.ts";
+import {useMenuStore} from "@/stores/menuStore";
 import {storeToRefs} from "pinia";
 
 const menuStore = useMenuStore()
@@ -20,7 +20,7 @@ onMounted(async () => {
             <template
                 v-for="menu in menus"
                 :key="menu?.slug">
-                <MenuItem :menu="menu"/>
+                <MenuItemCard :menu="menu"/>
             </template>
         </ul>
     </nav>

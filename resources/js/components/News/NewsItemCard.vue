@@ -1,14 +1,15 @@
-<script setup>
-const props = defineProps({
-    news: {
-        type: Object,
-        required: true
-    }
+<script setup lang="ts">
+import {NewsItemType} from "@/types/news";
+
+withDefaults(defineProps<{
+    news: NewsItemType | null
+}>(),{
+    news: null
 })
 </script>
 
 <template>
-    <RouterLink class="news-item" :to="`news/${news.slug}`">
+    <RouterLink v-if="news" class="news-item" :to="`news/${news.slug}`">
         <div class="news-item__image">
             <img
                 loading="lazy"
@@ -95,6 +96,14 @@ const props = defineProps({
         @media (max-width: $breakpoint-md) {
             gap: $space-2;
             padding: 0;
+        }
+
+        h3 {
+            display: -webkit-box;
+            -webkit-line-clamp: 1;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
         }
 
         &-description {

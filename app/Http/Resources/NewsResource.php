@@ -12,7 +12,7 @@ class NewsResource extends JsonResource
      *
      * @return array<string, mixed>
      */
-    public function toArray(Request $request): array
+    protected function baseData(): array
     {
         return [
             'title' => $this->title,
@@ -20,7 +20,12 @@ class NewsResource extends JsonResource
             'slug' => $this->slug,
             'viewsCount' => $this->views_count,
             'published' => $this->created_at->format('d.m.Y H:i'),
-            'image' => new ImageResource($this->images[0])
+            'image' => new ImageResource($this->images[0]),
         ];
+    }
+
+    public function toArray(Request $request): array
+    {
+        return $this->baseData();
     }
 }

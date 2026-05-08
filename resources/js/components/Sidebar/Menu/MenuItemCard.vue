@@ -1,17 +1,15 @@
-<script setup>
+<script setup lang="ts">
 
 import {ArrowRight} from "@element-plus/icons-vue";
 import {ref} from "vue";
+import {MenuItemType} from "@/types/menu";
 
-const props = defineProps({
-    menu: {
-        type: Object,
-        required: true
-    },
-    level: {
-        type: Number,
-        default: 0
-    }
+withDefaults(defineProps<{
+    menu: MenuItemType | null,
+    level?: number
+}>(),{
+    menu: null,
+    level: 0
 })
 
 const show = ref(false)
@@ -19,35 +17,39 @@ const show = ref(false)
 const toggleSubmenu = () => {
     show.value = !show.value
 }
-const beforeEnter = (el) => {
-    el.style.height = '0'
-    el.style.opacity = '0'
+const beforeEnter = (el: Element) => {
+    const element = el as HTMLElement;
+    element.style.height = '0'
+    element.style.opacity = '0'
 }
 
-const enter = (el) => {
-    el.style.transition = 'height 0.3s ease, opacity 0.3s ease'
-    el.style.height = el.scrollHeight + 'px'
-    el.style.opacity = '1'
+const enter = (el: Element) => {
+    const element = el as HTMLElement;
+    element.style.transition = 'height 0.3s ease, opacity 0.3s ease'
+    element.style.height = el.scrollHeight + 'px'
+    element.style.opacity = '1'
 
     setTimeout(() => {
-        el.style.height = 'auto'
+        element.style.height = 'auto'
     }, 300)
 }
 
-const leave = (el) => {
-    el.style.height = el.scrollHeight + 'px'
-    el.style.opacity = '1'
+const leave = (el: Element) => {
+    const element = el as HTMLElement;
+    element.style.height = el.scrollHeight + 'px'
+    element.style.opacity = '1'
 
     requestAnimationFrame(() => {
-        el.style.transition = 'height 0.3s ease, opacity 0.3s ease'
-        el.style.height = '0'
-        el.style.opacity = '0'
+        element.style.transition = 'height 0.3s ease, opacity 0.3s ease'
+        element.style.height = '0'
+        element.style.opacity = '0'
     })
 }
 </script>
 
+
 <template>
-    <template v-if="menu?.children?.length > 0">
+    <template v-if="menu?.children?.length">
         <li
             :class="`sidebar-menu__list-item ${show ? 'active' : ''}`"
             :style="{ paddingLeft: `${level * 16}px` }"
@@ -66,11 +68,12 @@ const leave = (el) => {
             @leave="leave"
         >
             <ul v-if="show && menu?.children?.length > 0" class="sidebar-menu__list">
-                <MenuItem
+                <MenuItemCard
                     v-for="item in menu.children"
                     :key="item.slug"
                     :menu="item"
-                    :level="level + 1"/>
+                    :level="level + 1"
+                />
             </ul>
         </Transition>
     </template>

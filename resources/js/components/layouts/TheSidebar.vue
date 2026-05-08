@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import MenuList from "@/components/Sidebar/Menu/MenuList.vue";
 import MenuSchedule from "@/components/Sidebar/MenuSchedule.vue";
 import TheOrganization from "@/components/Sidebar/TheOrganization.vue";

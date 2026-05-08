@@ -1,10 +1,10 @@
-export interface ImageItem {
+export interface ImageItemType {
     url: string,
     alt: string,
     width: number,
     height: number,
 }
 
-export interface ImageResponse {
-    data: ImageItem[];
+export interface ImageResponseType {
+    data: ImageItemType[];
 }

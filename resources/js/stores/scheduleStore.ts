@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 
-import { ScheduleItem } from '@/types/schedule'
+import { ScheduleItemType } from '@/types/schedule'
 
 export const useScheduleStore = defineStore('schedule', {
     state: () => ({
@@ -12,7 +12,7 @@ export const useScheduleStore = defineStore('schedule', {
             { number: 5, timeStart: "12:30", symbol: "-", timeEnd: "13:15", timeBreak: 10 },
             { number: 6, timeStart: "13:25", symbol: "-", timeEnd: "14:10", timeBreak: 10 },
             { number: 7, timeStart: "14:20", symbol: "-", timeEnd: "15:05", timeBreak: null }
-        ] as ScheduleItem[],
+        ] as ScheduleItemType[],
         activeLesson: null as number | null,
         activeBreak: null as number | null,
     }),

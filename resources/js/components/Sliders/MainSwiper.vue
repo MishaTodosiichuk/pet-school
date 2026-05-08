@@ -1,8 +1,8 @@
-<script setup>
+<script setup lang="ts">
 import {onMounted} from 'vue';
 import {Swiper, SwiperSlide} from 'swiper/vue';
 import {Navigation, Pagination, Autoplay} from 'swiper/modules';
-import {useGalleryStore} from "@/stores/gallery.ts";
+import {useGalleryStore} from "@/stores/galleryStore";
 import {storeToRefs} from 'pinia';
 
 import 'swiper/css';

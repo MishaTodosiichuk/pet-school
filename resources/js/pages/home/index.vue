@@ -1,9 +1,19 @@
-<script setup>
+<script setup lang="ts">
 
 import MainSwiper from "@/components/Sliders/MainSwiper.vue";
 import RandomImagesSection from "@/components/PagesSections/RandomImagesSection.vue";
 import NewsSection from "@/components/PagesSections/NewsSection.vue";
+import {onMounted} from "vue";
+import {useNewsStore} from "@/stores/newsStore";
+import {storeToRefs} from "pinia";
 
+const newsStore = useNewsStore()
+
+const {news} = storeToRefs(newsStore)
+
+onMounted(async () => {
+    await newsStore.getNews()
+})
 </script>
 
 <template>
@@ -22,7 +32,7 @@ import NewsSection from "@/components/PagesSections/NewsSection.vue";
             <MainSwiper/>
         </div>
     </section>
-    <NewsSection/>
+    <NewsSection :news="news"/>
     <RandomImagesSection/>
 </template>
 

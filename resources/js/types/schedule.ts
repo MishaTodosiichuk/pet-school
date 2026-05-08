@@ -1,4 +1,4 @@
-export interface ScheduleItem {
+export interface ScheduleItemType {
     number: number,
     timeStart: string,
     symbol: string,

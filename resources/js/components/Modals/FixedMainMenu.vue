@@ -1,10 +1,10 @@
-<script setup>
+<script setup lang="ts">
 import {ref, onMounted, onBeforeUnmount} from 'vue'
-import TopNavbar from "../layouts/TopNavbar.vue";
-import emitter from "@/eventBus.js";
+import TopNavbar from "@/components/layouts/TopNavbar.vue";
+import emitter from "@/eventBus";
 
 const isStickyVisible = ref(false)
-let observer = null
+let observer: IntersectionObserver | null = null
 
 onMounted(() => {
     const target = document.getElementById('main-navigate')

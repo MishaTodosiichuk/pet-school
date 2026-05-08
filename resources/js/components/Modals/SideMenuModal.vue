@@ -1,8 +1,7 @@
-<script setup>
+<script setup lang="ts">
 import {ref, onMounted, onUnmounted} from 'vue';
-import emitter from "@/eventBus.js";
+import emitter from "@/eventBus";
 import MenuList from "@/components/Sidebar/Menu/MenuList.vue";
-import MenuSchedule from "@/components/Sidebar/MenuSchedule.vue";
 import TheOrganization from "@/components/Sidebar/TheOrganization.vue";
 
 const isOpen = ref(false);

@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 import logoSrc from '/public/images/header/logo.png';
 import otherLogoSrc from '/public/images/header/otherLogo.png';
 </script>

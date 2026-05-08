@@ -1,13 +1,13 @@
-export interface MenuItem {
+export interface MenuItemType {
     title: string,
     slug: string,
-    children?: MenuItem[]
+    children?: MenuItemType[]
 }
-export interface StaticMenuItem {
+export interface StaticMenuItemType {
     title: string,
     link: string,
 }
 
-export interface MenuResponse {
-    data: MenuItem[];
+export interface MenuResponseType {
+    data: MenuItemType[];
 }

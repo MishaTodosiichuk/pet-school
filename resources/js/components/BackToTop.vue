@@ -1,9 +1,9 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted, onBeforeUnmount } from 'vue'
 import { ArrowUp } from "@element-plus/icons-vue"
 
 const isVisible = ref(false)
-let lastScrollTop = 0
+let lastScrollTop: number = 0
 
 const handleScroll = () => {
     const currentScrollTop = window.scrollY || document.documentElement.scrollTop

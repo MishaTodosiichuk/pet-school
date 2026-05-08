@@ -1,23 +1,30 @@
-<script setup>
-import {onUnmounted, ref, watch} from 'vue';
+<script setup lang="ts">
+import {nextTick, onMounted, onUnmounted, ref, watch} from 'vue';
 import {Swiper, SwiperSlide} from 'swiper/vue';
+import type { Swiper as SwiperClass } from 'swiper';
 import {Navigation, Pagination, Keyboard} from 'swiper/modules';
 
 import 'swiper/css';
 import 'swiper/css/navigation';
 import 'swiper/css/pagination';
+import {ImageItemType} from "@/types/image";
 
-const props = defineProps({
-    images: {type: Array, required: true},
-    modelValue: {type: [Number, null], default: null}
-});
+const props = withDefaults(defineProps<{
+    images: ImageItemType[] | null,
+    modelValue: number | null
+}>(),{
+    images: () => [],
+    modelValue: null
+})
 
-const emit = defineEmits(['update:modelValue']);
+const emit = defineEmits<{
+    (e: 'update:modelValue', value: null): void
+}>();
 
 const modules = [Navigation, Pagination, Keyboard];
-const swiperInstance = ref(null);
+const swiperInstance = ref<SwiperClass | null>(null);
 
-const onSwiper = (swiper) => {
+const onSwiper = (swiper: SwiperClass) => {
     swiperInstance.value = swiper;
 };
 
@@ -25,20 +32,33 @@ const close = () => {
     emit('update:modelValue', null);
 };
 
-watch(() => props.modelValue, (newIndex) => {
+const handleKeyDown = (e: KeyboardEvent) => {
+    if (e.key === 'Escape' && props.modelValue !== null) {
+        close();
+    }
+};
+
+watch(() => props.modelValue, async (newIndex) => {
     if (newIndex !== null) {
         document.body.style.overflow = 'hidden';
 
+        await nextTick();
         if (swiperInstance.value) {
             swiperInstance.value.slideTo(newIndex, 0);
+            swiperInstance.value.update();
         }
     } else {
         document.body.style.overflow = '';
     }
-}, {immediate: true});
+}, { immediate: true });
+
+onMounted(() => {
+    window.addEventListener('keydown', handleKeyDown);
+});
 
 onUnmounted(() => {
     document.body.style.overflow = '';
+    window.removeEventListener('keydown', handleKeyDown);
 });
 </script>
 

@@ -5,5 +5,9 @@
             "@/*": ["resources/js/*"],
             "@scss/*": ["resources/scss/*"]
         }
-    }
+    },
+    "include": [
+        "resources/js/**/*",
+        "resources/js/**/*.vue"
+    ]
 }

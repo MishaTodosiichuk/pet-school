@@ -1,7 +1,7 @@
-<script setup>
+<script setup lang="ts">
 
 import {useRoute} from "vue-router";
-import {useMenuStore} from "@/stores/menu.ts";
+import {useMenuStore} from "@/stores/menuStore";
 import {storeToRefs} from "pinia";
 
 const route = useRoute()

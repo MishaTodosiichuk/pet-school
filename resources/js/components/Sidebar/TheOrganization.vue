@@ -1,4 +1,4 @@
-<script setup>
+<script setup lang="ts">
 const organizations = [
     {
         href: 'https://mon.gov.ua/ua',

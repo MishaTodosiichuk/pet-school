@@ -1,13 +1,13 @@
-<script setup>
+<script setup lang="ts">
 import {onMounted, onUnmounted} from "vue";
-import {useScheduleStore} from "@/stores/schedule.ts";
+import {useScheduleStore} from "@/stores/scheduleStore";
 import {storeToRefs} from "pinia";
 
 const scheduleStore = useScheduleStore()
 
 const {schedule, activeLesson, activeBreak} = storeToRefs(scheduleStore);
 
-let timer = null
+let timer: number | null = null
 
 onMounted(() => {
     scheduleStore.updateActiveSchedule()
@@ -18,7 +18,10 @@ onMounted(() => {
 })
 
 onUnmounted(() => {
-    clearInterval(timer)
+    if (timer) {
+        clearInterval(timer)
+        timer = null
+    }
 })
 </script>
 

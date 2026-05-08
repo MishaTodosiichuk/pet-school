@@ -1,10 +1,10 @@
-import { ImageItem } from "@/types/image";
+import { ImageItemType } from "@/types/image";
 
-export interface GalleryItem {
+export interface GalleryItemType {
     title: string,
-    images: ImageItem[]
+    images: ImageItemType[]
 }
 
-export interface GalleryResponse {
-    data: GalleryItem;
+export interface GalleryResponseType {
+    data: GalleryItemType;
 }

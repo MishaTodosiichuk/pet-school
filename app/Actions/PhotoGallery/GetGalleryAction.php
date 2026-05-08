@@ -11,7 +11,7 @@ class GetGalleryAction
     {
         $gallery = PhotoGallery::query()
             ->published()
-            ->byKey('main-gallery')
+            ->byKey('main_slider')
             ->with('images')
             ->first();
 

@@ -1,7 +1,7 @@
-<script setup>
+<script setup lang="ts">
 import {computed} from "vue";
-
 import SocialNetworks from "@/components/SocialNetworks.vue";
+
 
 const currentYear = computed(() => new Date().getFullYear());
 </script>

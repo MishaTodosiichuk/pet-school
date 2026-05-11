@@ -8,13 +8,6 @@ const organizations = [
         height: '76px',
     },
     {
-        href: 'https://lib.imzo.gov.ua/yelektronn-vers-pdruchnikv/',
-        src: 'https://rada.info/upload/users_files/21431247/be81158f7592fc4b9d030c4c54bee53a.png',
-        alt: 'Електронні версії підручників',
-        width: '250px',
-        height: '78px',
-    },
-    {
         href: 'https://nz.ua/',
         src: 'https://rada.info/upload/users_files/21431247/d7e515be2b27c09dead855ab6cadd1b3.png',
         alt: 'Нові Знання',

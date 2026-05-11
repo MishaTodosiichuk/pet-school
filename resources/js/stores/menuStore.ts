@@ -8,7 +8,6 @@ export const useMenuStore = defineStore('menus', {
         isLoading: false,
         staticMenu: [
             { title: 'Головна', link: '/' },
-            { title: 'Виховна робота', link: '/struktura-vixovnoyi-roboti' },
             { title: 'Оголошення', link: '/news' },
             { title: 'Фотогалерея', link: '/gallery' },
             { title: 'Контакти', link: '/contacts' }

@@ -78,7 +78,7 @@ const fontSizeStyle = computed(() => ({
                             y2="38.5508"
                             gradientUnits="userSpaceOnUse"
                         >
-                            <stop stop-color="#1A76FF" offset=""/>
+                            <stop stop-color="#1A76FF" offset="0"/>
                             <stop offset="1" stop-color="#FFEA96"/>
                         </linearGradient>
                     </defs>

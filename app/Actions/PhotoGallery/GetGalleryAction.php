@@ -7,11 +7,11 @@ use App\Models\PhotoGallery;
 
 class GetGalleryAction
 {
-    public function getMainGallery(): PhotoGalleryResource
+    public function getGalleryByKey($key): PhotoGalleryResource
     {
         $gallery = PhotoGallery::query()
             ->published()
-            ->byKey('main_slider')
+            ->byKey($key)
             ->with('images')
             ->first();
 

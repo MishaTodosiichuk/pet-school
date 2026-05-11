@@ -7,7 +7,7 @@ import {LinksItemType, MetaItemType} from "@/types/pagination";
 
 export const useNewsStore = defineStore('news', {
     state: () => ({
-        news: [] as NewsItemType[],
+        news: [] as NewsItemType[] | null,
         singleNews: null as NewsItemShowType | null,
         allNews: [] as NewsItemType[],
         filters: {
@@ -18,73 +18,63 @@ export const useNewsStore = defineStore('news', {
     }),
 
     actions: {
-        async getNews() {
-            await loading.show()
-
+        async _wrapRequest<T>(request: Promise<{ data: { data: T } }>, errorMsg: string): Promise<T | null> {
+            await loading.show();
             try {
-                const res = await axios.get<NewsResponseType>('/api/news')
-                this.news = res.data.data
+                const res = await request;
+                return res.data.data;
             } catch (error) {
-                console.error('Помилка завантаження новин:', error)
+                console.error(errorMsg, error);
+                return null;
             } finally {
-                loading.hide()
+                loading.hide();
             }
+        },
+
+        async getNewsAll(page = 1, append = false, dates?: string[] | null) {
+            if (dates !== undefined) this.filters.dates = dates;
+
+            const params: Record<string, any> = { page };
+            if (this.filters.dates?.length === 2) {
+                params['start-date'] = this.filters.dates[0];
+                params['end-date'] = this.filters.dates[1];
+            }
+
+            await loading.show();
+            try {
+                const res = await axios.get<NewsResponseType>('/api/news-all-data', { params });
+
+                this.allNews = append ? [...this.allNews, ...res.data.data] : res.data.data;
+                this.links = res.data.links;
+                this.meta = res.data.meta;
+
+                if (page === 1 && !dates) this.news = res.data.data;
+
+            } catch (error) {
+                console.error('Помилка завантаження списку новин:', error);
+            } finally {
+                loading.hide();
+            }
+        },
+
+        async getNews() {
+            const data = await this._wrapRequest<NewsResponseType['data']>(
+                axios.get(`/api/news`),
+                'Помилка завантаження новин'
+            );
+            if (data) this.news = data;
         },
 
         async getNewsBySlug(slug: string) {
-            await loading.show()
-
-            try {
-                const res = await axios.get<SingleNewsResponseType>(`/api/news-show-single/${slug}`)
-                this.singleNews = res.data.data
-            } catch (error) {
-                console.error('Помилка завантаження новини:', error)
-            } finally {
-                loading.hide()
-            }
+            const data = await this._wrapRequest<SingleNewsResponseType['data']>(
+                axios.get(`/api/news-show-single/${slug}`),
+                'Помилка завантаження новини'
+            );
+            if (data) this.singleNews = data;
         },
 
-        async getNewsAll(
-            page = 1,
-            append = false,
-            dates: string[] | null | undefined = undefined
-        ) {
-            await loading.show()
-
-            if (dates !== undefined) {
-                this.filters.dates = dates
-            }
-
-            const params: Record<string, any> = { page }
-
-            if (this.filters.dates?.length === 2) {
-                params['start-date'] = this.filters.dates[0]
-                params['end-date'] = this.filters.dates[1]
-            }
-
-            try {
-                const res = await axios.get<NewsResponseType>('/api/news-all-data', { params })
-
-                if (append) {
-                    this.allNews = [...this.allNews, ...res.data.data]
-                } else {
-                    this.allNews = res.data.data
-                }
-
-                this.links = res.data.links
-                this.meta = res.data.meta
-            } catch (error) {
-                console.error('Помилка фільтрації:', error)
-            } finally {
-                loading.hide()
-            }
-        },
-
-        async incrementViews (slug: string) {
-            try {
-                await axios.post(`/api/news/${slug}/views`)
-            } catch (e) {
-            }
+        async incrementViews(slug: string) {
+            axios.post(`/api/news/${slug}/views`).catch(() => {});
         }
     }
 })

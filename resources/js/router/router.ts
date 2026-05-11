@@ -16,6 +16,11 @@ const routes: RouteRecordRaw[] = [
         name: 'news-show',
         component: () => import('@/pages/news/show.vue')
     },
+    {
+        path: '/gallery',
+        name: 'gallery',
+        component: () => import('@/pages/gallery/index.vue')
+    },
 ];
 
 const router = createRouter({

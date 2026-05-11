@@ -6,7 +6,7 @@ import {ImageItemType} from "@/types/image";
 withDefaults(defineProps<{
     images: ImageItemType[] | null
 }>(),{
-    images: () => []
+    images: () => [],
 })
 
 const activeIndex = ref<number | null>(null);
@@ -35,6 +35,10 @@ const activeIndex = ref<number | null>(null);
     display: grid;
     grid-template-columns: repeat(5, 1fr);
     gap: $space-4;
+
+    @media (max-width: $breakpoint-lg) {
+        grid-template-columns: repeat(3, 1fr);
+    }
 
     @media (max-width: $breakpoint-md) {
         grid-template-columns: repeat(2, 1fr);

@@ -6,12 +6,12 @@ export const useScheduleStore = defineStore('schedule', {
     state: () => ({
         schedule: [
             { number: 1, timeStart: "08:30", symbol: "-", timeEnd: "09:15", timeBreak: 10 },
-            { number: 2, timeStart: "09:25", symbol: "-", timeEnd: "10:10", timeBreak: 10 },
-            { number: 3, timeStart: "10:20", symbol: "-", timeEnd: "11:05", timeBreak: 20 },
-            { number: 4, timeStart: "11:25", symbol: "-", timeEnd: "12:10", timeBreak: 20 },
-            { number: 5, timeStart: "12:30", symbol: "-", timeEnd: "13:15", timeBreak: 10 },
-            { number: 6, timeStart: "13:25", symbol: "-", timeEnd: "14:10", timeBreak: 10 },
-            { number: 7, timeStart: "14:20", symbol: "-", timeEnd: "15:05", timeBreak: null }
+            { number: 2, timeStart: "09:25", symbol: "-", timeEnd: "10:10", timeBreak: 20 },
+            { number: 3, timeStart: "10:30", symbol: "-", timeEnd: "11:15", timeBreak: 10 },
+            { number: 4, timeStart: "11:25", symbol: "-", timeEnd: "12:10", timeBreak: 10 },
+            { number: 5, timeStart: "12:20", symbol: "-", timeEnd: "13:05", timeBreak: 10 },
+            { number: 6, timeStart: "13:15", symbol: "-", timeEnd: "14:00", timeBreak: 10 },
+            { number: 7, timeStart: "14:10", symbol: "-", timeEnd: "14:55", timeBreak: null }
         ] as ScheduleItemType[],
         activeLesson: null as number | null,
         activeBreak: null as number | null,

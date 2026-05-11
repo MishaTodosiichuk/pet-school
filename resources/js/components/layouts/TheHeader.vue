@@ -52,12 +52,12 @@ import otherLogoSrc from '/public/images/header/otherLogo.png';
     }
 
     &__logo {
-        width: 94px;
+        width: 117px;
         height: auto;
     }
 
     &__other-logo {
-        width: 124px;
+        width: 147px;
         height: auto;
     }
 

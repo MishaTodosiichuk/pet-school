@@ -12,7 +12,10 @@
 @include('admin.includes.action-notification')
 <div class="card">
     <div class="card-header">
-        @include('admin.includes.buttons.actions.create')
+        @if(isset($routes['create']))
+            @include('admin.includes.buttons.actions.create')
+        @endif
+
         <div class="card-tools">
             <form action="{{ $search['action'] }}" method="GET">
                 <div class="input-group input-group-sm" style="width: 250px;">
@@ -46,8 +49,15 @@
                         {{ $column['label'] }}
                     </th>
                 @endforeach
-                <th class="text-center" style="width: {{ $actionsWidth }};">Змінити</th>
-                <th class="text-center" style="width: {{ $actionsWidth }};">Видалити</th>
+                @if(isset($routes['edit']))
+                    <th class="text-center" style="width: {{ $actionsWidth }};">Змінити</th>
+                @endif
+                @if(isset($routes['show']))
+                    <th class="text-center" style="width: {{ $actionsWidth }};">Переглянути</th>
+                @endif
+                @if(isset($routes['destroy']))
+                    <th class="text-center" style="width: {{ $actionsWidth }};">Видалити</th>
+                @endif
             </tr>
             </thead>
             <tbody>
@@ -66,12 +76,21 @@
                         </td>
                     @endforeach
 
-                    <td class="text-center">
-                        @include('admin.includes.buttons.actions.edit')
-                    </td>
-                    <td class="text-center">
-                        @include('admin.includes.buttons.actions.destroy')
-                    </td>
+                    @if(isset($routes['edit']))
+                        <td class="text-center">
+                            @include('admin.includes.buttons.actions.edit')
+                        </td>
+                    @endif
+                    @if(isset($routes['show']))
+                        <td class="text-center">
+                            @include('admin.includes.buttons.actions.show')
+                        </td>
+                    @endif
+                    @if(isset($routes['destroy']))
+                        <td class="text-center">
+                            @include('admin.includes.buttons.actions.destroy')
+                        </td>
+                    @endif
                 </tr>
             @endforeach
             </tbody>

@@ -57,13 +57,13 @@ onMounted(async () => {
 </script>
 
 <template>
-    <section class="section">
+    <div class="section">
         <div v-if="singleNews" class="news-page">
-            <h1 class="heading-line">{{ singleNews.title }}</h1>
+            <h1 class="heading-line">{{ singleNews?.title }}</h1>
 
             <section class="section news-page__info">
-                <div>Дата: <span>{{ singleNews.published }}</span></div>
-                <div>Кількість переглядів: <span>{{ singleNews.viewsCount }}</span></div>
+                <div>Дата: <span>{{ singleNews?.published }}</span></div>
+                <div>Кількість переглядів: <span>{{ singleNews?.viewsCount }}</span></div>
                 <div class="share">
                     <button type="button" @click="share('facebook')">
                         <i class="fab fa-facebook"></i>
@@ -87,21 +87,20 @@ onMounted(async () => {
 
             <section class="section news-page__image">
                 <img
-                    v-if="singleNews.image"
-                    :src="singleNews.image.url"
-                    :alt="singleNews.image.alt"
+                    :src="singleNews?.image.url"
+                    :alt="singleNews?.image.alt"
                 >
             </section>
 
             <div class="hr"></div>
 
-            <section class="section news-page__description" v-html="singleNews.description"></section>
+            <section class="section news-page__description" v-html="singleNews?.description"></section>
 
             <div class="hr"></div>
 
             <section class="section">
                 <h2 class="heading-line">Всі фотографії</h2>
-                <GridImages :images="singleNews.images"/>
+                <GridImages :images="singleNews?.images"/>
             </section>
         </div>
 
@@ -116,7 +115,7 @@ onMounted(async () => {
             <div class="skeleton__text"></div>
             <div class="skeleton__text"></div>
         </div>
-    </section>
+    </div>
 </template>
 
 <style scoped lang="scss">

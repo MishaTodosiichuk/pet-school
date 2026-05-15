@@ -36,6 +36,8 @@ jobs:
           echo "DB_USERNAME=${{ secrets.DEV__DB_USERNAME }}" >> .env
           echo "DB_PASSWORD=${{ secrets.DEV__DB_PASSWORD }}" >> .env
           echo "VITE_APP_NAME=\"${{ vars.DEV__APP_NAME }}\"" >> .env
+          echo "RECAPTCHA_SITE_KEY=\"${{ vars.DEV__RECAPTCHA_SITE_KEY }}\"" >> .env
+          echo "RECAPTCHA_SECRET_KEY=\"${{ vars.DEV__RECAPTCHA_SECRET_KEY }}\"" >> .env
 
       - name: Install node_modules
         run: npm ci && npm install --save-dev @rollup/rollup-linux-x64-gnu

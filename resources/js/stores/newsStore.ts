@@ -1,6 +1,6 @@
 import { defineStore } from 'pinia'
 import axios from 'axios'
-import { loading } from '@/loading'
+import { loading } from '@/utils/loading'
 
 import {NewsItemType, NewsItemShowType, NewsResponseType, SingleNewsResponseType} from '@/types/news'
 import {LinksItemType, MetaItemType} from "@/types/pagination";

@@ -20,6 +20,10 @@
         <link rel="apple-touch-icon" sizes="180x180" href="{{asset('/apple-touch-icon.png?v=1')}}">
 
         <link rel="manifest" href="{{asset('/site.webmanifest')}}">
+
+        <script>
+            window.recaptchaSiteKey = "{{ config('services.recaptcha.key') }}";
+        </script>
         <!-- Styles / Scripts -->
         @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))
             @vite(['resources/css/app.css', 'resources/js/app.js'])

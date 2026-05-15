@@ -40,4 +40,8 @@ return [
         'secret' => env('RECAPTCHA_SECRET_KEY'),
     ],
 
+    'maps' => [
+        'key' => env('MAPS_API_KEY'),
+    ],
+
 ];

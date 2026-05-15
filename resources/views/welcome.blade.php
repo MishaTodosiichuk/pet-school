@@ -23,6 +23,7 @@
 
         <script>
             window.recaptchaSiteKey = "{{ config('services.recaptcha.key') }}";
+            window.mapApiKey = "{{ config('services.maps.key') }}";
         </script>
         <!-- Styles / Scripts -->
         @if (file_exists(public_path('build/manifest.json')) || file_exists(public_path('hot')))

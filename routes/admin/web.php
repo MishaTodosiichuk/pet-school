@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminController;
+use App\Http\Controllers\Admin\ContactController;
+use App\Http\Controllers\Admin\FeedbackController;
 use App\Http\Controllers\Admin\MenuController;
 use App\Http\Controllers\Admin\NewsController;
 use App\Http\Controllers\Admin\PhotoGalleryController;
@@ -20,4 +22,8 @@ Route::middleware('auth')->prefix('admin')->name('admin.')->group(function () {
     Route::resource('news', NewsController::class)->except('show');
 
     Route::resource('gallery', PhotoGalleryController::class)->except('show');
+
+    Route::resource('contact', ContactController::class)->except(['show', 'create', 'store', 'destroy']);
+
+    Route::resource('feedback', FeedbackController::class)->except(['create', 'store', 'edit', 'update']);
 });

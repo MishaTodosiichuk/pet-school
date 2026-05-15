@@ -49,13 +49,13 @@ onBeforeUnmount(() => {
 .back-to-top-wrapper {
     position: fixed;
     z-index: 999;
-    bottom: 40px;
-    right: 40px;
+    bottom: 20px;
+    right: 80px;
     cursor: pointer;
 
     @media (max-width: 1024px) {
         bottom: 80px;
-        right: 20px;
+        right: 8px;
     }
 }
 

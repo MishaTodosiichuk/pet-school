@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { loading } from '@/loading'
+import { loading } from '@/utils/loading'
 </script>
 
 <template>

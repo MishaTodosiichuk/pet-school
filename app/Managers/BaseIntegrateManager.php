@@ -4,6 +4,7 @@ namespace App\Managers;
 use App\Actions\CrudActions;
 use App\Traits\Managers\HasRelationFieldsTrait;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Support\Facades\Route;
 
 abstract class BaseIntegrateManager
 {
@@ -21,6 +22,23 @@ abstract class BaseIntegrateManager
             'id'    => ['label' => 'ID', 'class' => 'text-center', 'type' => 'id'],
             'title' => ['label' => 'Назва', 'class' => ''],
         ];
+    }
+    protected function getRoutes(string $module): array
+    {
+        $getRoute = function($action) use ($module) {
+            $name = "admin.{$module}.{$action}";
+            return Route::has($name) ? $name : null;
+        };
+        $routes = [
+            'index'   => Route::has("admin.{$module}.index") ? route("admin.{$module}.index") : null,
+            'create'  => Route::has("admin.{$module}.create") ? route("admin.{$module}.create") : null,
+            'show'    => $getRoute('show'),
+            'edit'    => $getRoute('edit'),
+            'destroy' => $getRoute('destroy'),
+            'publish' => Route::has("admin.{$module}.publish") ? route("admin.{$module}.publish", [':id']) : null,
+        ];
+
+        return array_filter($routes);
     }
 
     abstract public function getFields(?Model $model = null): array;
@@ -67,6 +85,13 @@ abstract class BaseIntegrateManager
                 'active' => true,
             ];
         }
+        if ($action === 'show') {
+            $breadcrumbs[] = [
+                'title'  => $model?->id,
+                'link'   => '#',
+                'active' => true,
+            ];
+        }
 
         return $breadcrumbs;
     }
@@ -100,10 +125,16 @@ abstract class BaseIntegrateManager
     {
         $module = $this->getModuleName();
 
+        if ($method === 'POST') {
+            $routeName = "admin.{$module}.store";
+            $action = Route::has($routeName) ? route($routeName) : null;
+        } else {
+            $routeName = "admin.{$module}.update";
+            $action = Route::has($routeName) ? route($routeName, $model?->id) : null;
+        }
+
         return [
-            'action' => $method === 'POST'
-                ? route("admin.{$module}.store")
-                : route("admin.{$module}.update", $model?->id),
+            'action' => $action,
             'method' => $method,
             'actions' => $this->getFormActions(),
             'fields' => $this->getFields($model),
@@ -116,13 +147,7 @@ abstract class BaseIntegrateManager
 
         return [
             'columns' => $this->getTableColumns(),
-            'routes' => [
-                'index'   => route("admin.{$module}.index"),
-                'create'  => route("admin.{$module}.create"),
-                'edit'    => "admin.{$module}.edit",
-                'destroy' => "admin.{$module}.destroy",
-                'publish' => "/admin/{$module}/:id/publish",
-            ],
+            'routes' => $this->getRoutes($module),
             'search' => [
                 'action' => route("admin.{$module}.index"),
             ]

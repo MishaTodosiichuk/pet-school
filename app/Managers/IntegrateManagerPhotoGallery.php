@@ -65,4 +65,8 @@ class IntegrateManagerPhotoGallery extends BaseIntegrateManager
             'images' => $this->getRelationField($model, 'images', 'Галерея', 'alt', 'images','main'),
         ];
     }
+    public function getDynamicFields(?Model $model = null): array
+    {
+        return [];
+    }
 }

@@ -15,6 +15,10 @@ return new class extends Migration
             $table->id();
             $table->string('title');
             $table->string('slug');
+            $table->foreignId('page_id')
+                ->nullable()
+                ->constrained()
+                ->nullOnDelete();
             $table->boolean('publish')->default(true);
             $table->nestedSet();
             $table->softDeletes();

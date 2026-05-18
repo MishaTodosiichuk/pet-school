@@ -27,6 +27,7 @@ class StoreRequest extends FormRequest
             'slug'           => ['nullable','string','max:100','min:3','unique:menus,slug'],
             'publish'        => ['nullable','boolean'],
             'parent_id'      => ['nullable','integer','exists:menus,id'],
+            'page_id'        => ['nullable','integer','exists:pages,id'],
         ];
     }
 }

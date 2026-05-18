@@ -1,6 +1,7 @@
 @php
     $id = $name . '_' . Str::random(4);
     $currentValue = old($name, $field['value'] ?? '');
+    $isMultiple = !empty($field['multiple']) || str_ends_with($name, '[]');
 @endphp
 
 <div class="form-group">
@@ -12,11 +13,23 @@
         id="{{ $id }}"
         class="form-control select2-init @error($name) is-invalid @enderror"
         style="width: 100%;"
+        {{ $isMultiple ? 'multiple' : '' }}
     >
-        <option value="">{{ $field['placeholder'] ?? 'Не обрано' }}</option>
+        @if(!$isMultiple)
+            <option value="">{{ $field['placeholder'] ?? 'Не обрано' }}</option>
+        @endif
+
         @foreach($field['options'] as $option)
-            <option value="{{ $option->id }}"
-                {{ (string)$currentValue === (string)$option->id ? 'selected' : '' }}>
+            @php
+                $isSelected = false;
+                if ($isMultiple) {
+                    $isSelected = is_array($currentValue) && in_array($option->id, $currentValue);
+                } else {
+                    $isSelected = (string)$currentValue === (string)$option->id;
+                }
+            @endphp
+
+            <option value="{{ $option->id }}" {{ $isSelected ? 'selected' : '' }}>
                 {{ $option->display_name ?? $option->title }}
             </option>
         @endforeach
@@ -35,7 +48,7 @@
                     theme: 'bootstrap4',
                     language: "uk",
                     width: '100%',
-                    placeholder: "{{ $field['placeholder'] ?? 'Почніть вводити...' }}",
+                    placeholder: "Почніть вводити...",
                     allowClear: true
                 });
             });

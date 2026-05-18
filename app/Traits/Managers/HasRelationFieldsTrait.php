@@ -53,15 +53,15 @@ trait HasRelationFieldsTrait
 
         $keyName = $isMultiple ? $relationName : $relation->getForeignKeyName();
 
+        $inputName = $isMultiple ? "{$keyName}[]" : $keyName;
         $field = [
             'type' => $type,
             'label' => $label,
+            'name' => $inputName,
             'multiple' => $isMultiple,
             'column' => $column,
             'value' => $isMultiple
-                ? old($keyName, $model->exists
-                    ? $relation->pluck($relation->getRelated()->getTable() . '.id')->toArray()
-                    : [])
+                ? old($keyName, $model->exists ? $relation->get()->modelKeys() : []) // Оптимізовано отримання ID моделей
                 : old($keyName, $model->$keyName),
         ];
 

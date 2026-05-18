@@ -20,4 +20,9 @@ class Page extends Model
         return $this->hasMany(PageBlock::class, 'page_id', 'id')
             ->orderBy('sort_order');
     }
+
+    public function menus(): HasMany
+    {
+        return $this->hasMany(Menu::class, 'page_id');
+    }
 }

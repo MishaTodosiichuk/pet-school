@@ -35,6 +35,7 @@ class UpdateRequest extends FormRequest
                 Rule::unique('menus', 'slug')->ignore($menuId)],
             'publish' => ['nullable','boolean'],
             'parent_id' => ['nullable','integer','exists:menus,id'],
+            'page_id' => ['nullable','integer','exists:pages,id'],
         ];
     }
 }

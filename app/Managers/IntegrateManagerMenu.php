@@ -59,6 +59,8 @@ class IntegrateManagerMenu extends BaseIntegrateManager
 
             'parent_id' => $this->getRelationField($model, 'parent', 'Батьківський елемент'),
 
+            'page_id' => $this->getRelationField($model, 'page', 'Сторінка'),
+
             'publish' => [
                 'type' => 'switch',
                 'label' => 'Опублікувати',

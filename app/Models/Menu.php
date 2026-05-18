@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Kalnoy\Nestedset\NodeTrait;
 
@@ -17,7 +18,8 @@ class Menu extends Model
         'title',
         'slug',
         'publish',
-        'parent_id'
+        'parent_id',
+        'page_id',
     ];
 
     protected $casts = [
@@ -37,5 +39,10 @@ class Menu extends Model
     public function children()
     {
         return $this->hasMany(self::class, 'parent_id');
+    }
+
+    public function page(): BelongsTo
+    {
+        return $this->belongsTo(Page::class, 'page_id');
     }
 }

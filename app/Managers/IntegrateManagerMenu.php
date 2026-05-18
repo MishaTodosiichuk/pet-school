@@ -67,4 +67,8 @@ class IntegrateManagerMenu extends BaseIntegrateManager
             ],
         ];
     }
+    public function getDynamicFields(?Model $model = null): array
+    {
+        return [];
+    }
 }

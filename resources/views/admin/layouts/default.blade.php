@@ -112,7 +112,7 @@
     </div>
 
     <footer class="main-footer">
-        <strong>Copyright &copy; {{now()->year}} <a href="#">Васловівський ЗЗСО</a>.</strong>
+        <strong>Copyright &copy; {{now()->year}} <a href="http://t.me/MishaTodosiichuk">Todosiichuk M</a>.</strong>
         Всі права захищені.
         <div class="float-right d-none d-sm-inline-block">
             <b>Version</b> 0.1

@@ -4,6 +4,7 @@ use App\Managers\IntegrateManagerContacts;
 use App\Managers\IntegrateManagerFeedback;
 use App\Managers\IntegrateManagerMenu;
 use App\Managers\IntegrateManagerNews;
+use App\Managers\IntegrateManagerPage;
 use App\Managers\IntegrateManagerPhotoGallery;
 
 return [
@@ -13,5 +14,6 @@ return [
         IntegrateManagerPhotoGallery::class,
         IntegrateManagerContacts::class,
         IntegrateManagerFeedback::class,
+        IntegrateManagerPage::class,
     ]
 ];

@@ -43,6 +43,13 @@ abstract class BaseIntegrateManager
 
     abstract public function getFields(?Model $model = null): array;
 
+    abstract public function getDynamicFields(?Model $model = null): array;
+
+    public function getDynamicRelation(): ?string
+    {
+        return null;
+    }
+
     public function getBreadcrumbs(string $action = 'index', ?Model $model = null): array
     {
         $module = $this->getModuleName();
@@ -138,6 +145,10 @@ abstract class BaseIntegrateManager
             'method' => $method,
             'actions' => $this->getFormActions(),
             'fields' => $this->getFields($model),
+            'dynamicFields' => $this->getDynamicFields($model),
+            'dynamicRelation' => method_exists($this, 'getDynamicRelation')
+                ? $this->getDynamicRelation()
+                : null,
         ];
     }
 

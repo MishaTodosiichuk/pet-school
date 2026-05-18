@@ -2,38 +2,36 @@
 
 namespace App\Managers;
 
-use App\Models\News;
+use App\Models\Page;
 use Illuminate\Database\Eloquent\Model;
 
-class IntegrateManagerNews extends BaseIntegrateManager
+class IntegrateManagerPage extends BaseIntegrateManager
 {
     public function getModuleName(): string
     {
-        return 'news';
+        return 'page';
     }
 
     public function getModuleTitle(): string
     {
-        return 'Новини';
+        return 'Інформація на сторінках';
     }
 
     public function getModuleIcon(): string
     {
-        return 'far fa-newspaper';
+        return 'fas fa-info-circle';
     }
 
     public function getModelClass(): string
     {
-        return News::class;
+        return Page::class;
     }
 
     protected function getTableColumns(): array
     {
         return [
-            'id'            => ['label' => 'ID', 'class' => 'text-center', 'type' => 'id'],
-            'title'         => ['label' => 'Назва', 'class' => ''],
-            'description'   => ['label' => 'Опис', 'class' => ''],
-            'publish'       => ['label' => 'Опублікований', 'class' => 'text-center', 'type' => 'switch'],
+            'id' => ['label' => 'ID', 'class' => 'text-center', 'type' => 'id'],
+            'title' => ['label' => 'Назва', 'class' => ''],
         ];
     }
 
@@ -46,34 +44,49 @@ class IntegrateManagerNews extends BaseIntegrateManager
                 'type' => 'string',
                 'label' => 'Назва',
                 'placeholder' => 'Введіть назву',
-                'column' => 'main',
+                'column' => 'full',
                 'value' => old('title', $model?->title),
             ],
-            'slug' => [
+        ];
+    }
+
+    public function getDynamicFields(?Model $model = null): array
+    {
+        return [
+            'title' => [
                 'type' => 'string',
-                'label' => 'Слаг',
-                'placeholder' => 'Введіть слаг',
+                'label' => 'Назва',
+                'placeholder' => 'Введіть назву',
                 'column' => 'main',
-                'value' => old('slug', $model?->slug),
+                'value' => null,
             ],
-            'description' => [
+
+            'text' => [
                 'type' => 'text',
                 'label' => 'Опис',
                 'placeholder' => 'Введіть опис',
                 'column' => 'main',
-                'value' => old('description', $model?->description),
+                'value' => null,
             ],
+
+            'file' => [
+                'type' => 'documents',
+                'label' => 'Файли',
+                'placeholder' => 'Оберіть файл',
+                'column' => 'main',
+                'value' => null,
+            ],
+
             'publish' => [
                 'type' => 'switch',
                 'label' => 'Опублікувати',
                 'column' => 'side',
-                'value' => old('publish', $model ? $model->publish : true),
+                'value' => true,
             ],
-            'images' => $this->getRelationField($model, 'images', 'Галерея', 'alt', 'images','main'),
         ];
     }
-    public function getDynamicFields(?Model $model = null): array
+    public function getDynamicRelation(): ?string
     {
-        return [];
+        return 'blocks';
     }
 }

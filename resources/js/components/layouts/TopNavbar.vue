@@ -30,6 +30,13 @@ const {staticMenu} = storeToRefs(menuStore);
 </template>
 
 <style scoped lang="scss">
+.main-content {
+    .navbar-menu {
+        @media (max-width: $breakpoint-md) {
+            display: none;
+        }
+    }
+}
 .navbar-menu {
     background: $color-primary;
     padding: 0 $space-8;
@@ -40,10 +47,6 @@ const {staticMenu} = storeToRefs(menuStore);
     @media (max-width: $breakpoint-lg) {
         border-radius: 4px;
         padding: 0 $space-4;
-    }
-
-    @media (max-width: $breakpoint-md) {
-        display: none;
     }
 
     &__list {
@@ -63,6 +66,11 @@ const {staticMenu} = storeToRefs(menuStore);
 
         @media (max-width: $breakpoint-lg) {
             font-size: clamp(1rem, 1.6vw + 0.3rem, 1.25rem);
+        }
+
+        @media (max-width: $breakpoint-md) {
+            width: 100%;
+            gap: $space-3;
         }
 
         &-item {

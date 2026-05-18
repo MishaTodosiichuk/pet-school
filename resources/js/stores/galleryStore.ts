@@ -2,6 +2,7 @@ import { defineStore } from 'pinia'
 import axios from "axios";
 
 import { GalleryItemType, GalleryResponseType} from '@/types/gallery'
+import {loading} from "@/utils/loading";
 
 export const useGalleryStore = defineStore('gallery', {
     state: () => ({
@@ -15,12 +16,14 @@ export const useGalleryStore = defineStore('gallery', {
     actions: {
         async fetchGallery(endpoint: 'main-gallery' | 'page-gallery', target: 'mainGallery' | 'pageGallery') {
             this.isLoading = true
+            await loading.show()
             try {
                 const { data } = await axios.get<GalleryResponseType>(`/api/${endpoint}`)
                 this[target] = data.data
             } catch (error) {
                 console.error(`Помилка завантаження ${endpoint}:`, error)
             } finally {
+                loading.hide()
                 this.isLoading = false
             }
         },

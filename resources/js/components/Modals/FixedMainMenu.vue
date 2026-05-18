@@ -36,7 +36,9 @@ onBeforeUnmount(() => {
                     <div class="sticky-menu-block__left">
                         <i class="fas fa-bars" @click="emitter.emit('open-side-menu')"></i>
                     </div>
-                    <TopNavbar style="width: fit-content; padding: 0;"/>
+                    <div class="sticky-menu-block__right">
+                        <TopNavbar style="width: fit-content; padding: 0;"/>
+                    </div>
                 </div>
 
             </div>
@@ -70,8 +72,10 @@ onBeforeUnmount(() => {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    width: 100%;
 
     &__left {
+        width: fit-content;
         i {
             font-size: 1.75rem;
             color: white;
@@ -81,6 +85,15 @@ onBeforeUnmount(() => {
             &:hover {
                 color: $color-gray-400;
             }
+        }
+    }
+
+    &__right {
+        width: fit-content;
+
+        @media (max-width: 510px) {
+            max-width: 80vw;
+            overflow-x: auto;
         }
     }
 }

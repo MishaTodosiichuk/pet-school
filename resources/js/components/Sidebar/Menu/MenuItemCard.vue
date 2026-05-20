@@ -1,43 +1,88 @@
 <script setup lang="ts">
+import { ArrowRight } from '@element-plus/icons-vue'
+import { computed, ref, watch } from 'vue'
+import { useRoute } from 'vue-router'
+import type { MenuItemType } from '@/types/menu'
 
-import {ArrowRight} from "@element-plus/icons-vue";
-import {ref} from "vue";
-import {MenuItemType} from "@/types/menu";
-
-withDefaults(defineProps<{
-    menu: MenuItemType | null,
+const props = withDefaults(defineProps<{
+    menu: MenuItemType | null
     level?: number
-}>(),{
+}>(), {
     menu: null,
     level: 0
 })
 
+const route = useRoute()
+
 const show = ref(false)
+
+const activeSlug = computed(() => route.params.slug as string | undefined)
+
+const hasChildren = computed(() => {
+    return !!props.menu?.children?.length
+})
+
+const hasActiveChild = (item: MenuItemType | null): boolean => {
+    if (!item || !activeSlug.value) {
+        return false
+    }
+
+    if (item.slug === activeSlug.value) {
+        return true
+    }
+
+    return item.children?.some(child => hasActiveChild(child)) ?? false
+}
+
+const isActive = computed(() => {
+    return hasActiveChild(props.menu)
+})
+
+const checkAndExpandMenu = () => {
+    if (hasChildren.value) {
+        show.value = isActive.value
+    }
+}
+
+watch(
+    () => activeSlug.value,
+    () => {
+        checkAndExpandMenu()
+    },
+    { immediate: true }
+)
 
 const toggleSubmenu = () => {
     show.value = !show.value
 }
+
 const beforeEnter = (el: Element) => {
-    const element = el as HTMLElement;
+    const element = el as HTMLElement
+
     element.style.height = '0'
     element.style.opacity = '0'
+    element.style.overflow = 'hidden'
 }
 
 const enter = (el: Element) => {
-    const element = el as HTMLElement;
+    const element = el as HTMLElement
+
     element.style.transition = 'height 0.3s ease, opacity 0.3s ease'
-    element.style.height = el.scrollHeight + 'px'
+    element.style.height = `${element.scrollHeight}px`
     element.style.opacity = '1'
 
     setTimeout(() => {
         element.style.height = 'auto'
+        element.style.overflow = ''
     }, 300)
 }
 
 const leave = (el: Element) => {
-    const element = el as HTMLElement;
-    element.style.height = el.scrollHeight + 'px'
+    const element = el as HTMLElement
+
+    element.style.height = `${element.scrollHeight}px`
     element.style.opacity = '1'
+    element.style.overflow = 'hidden'
 
     requestAnimationFrame(() => {
         element.style.transition = 'height 0.3s ease, opacity 0.3s ease'
@@ -49,27 +94,36 @@ const leave = (el: Element) => {
 
 
 <template>
-    <template v-if="menu?.children?.length">
+    <template v-if="hasChildren">
         <li
-            :class="`sidebar-menu__list-item ${show ? 'active' : ''}`"
+            class="sidebar-menu__list-item"
+            :class="{ active: isActive }"
             :style="{ paddingLeft: `${level * 16}px` }"
-            @click="toggleSubmenu"
         >
-            <a href="#">
-                {{ menu?.title }}
-            </a>
-            <el-icon>
-                <ArrowRight/>
-            </el-icon>
+            <button
+                type="button"
+                class="sidebar-menu__button"
+                @click="toggleSubmenu"
+            >
+                <span>{{ menu?.title }}</span>
+
+                <el-icon :class="{ 'arrow-rotated': show }">
+                    <ArrowRight />
+                </el-icon>
+            </button>
         </li>
+
         <Transition
             @before-enter="beforeEnter"
             @enter="enter"
             @leave="leave"
         >
-            <ul v-if="show && menu?.children?.length > 0" class="sidebar-menu__list">
+            <ul
+                v-if="show"
+                class="sidebar-menu__list"
+            >
                 <MenuItemCard
-                    v-for="item in menu.children"
+                    v-for="item in menu?.children"
                     :key="item.slug"
                     :menu="item"
                     :level="level + 1"
@@ -78,12 +132,14 @@ const leave = (el: Element) => {
         </Transition>
     </template>
     <template v-else>
-        <li class="sidebar-menu__list-item"
+        <li
+            class="sidebar-menu__list-item"
+            :class="{ active: activeSlug === menu?.slug }"
             :style="{ paddingLeft: `${level * 16}px` }"
         >
-            <a :href="menu?.slug">
+            <RouterLink :to="`/page/${menu?.slug}`">
                 {{ menu?.title }}
-            </a>
+            </RouterLink>
         </li>
     </template>
 </template>
@@ -92,6 +148,10 @@ const leave = (el: Element) => {
 
 .sidebar-menu {
     &__list {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+
         &-item {
             display: flex;
             justify-content: space-between;
@@ -101,46 +161,84 @@ const leave = (el: Element) => {
             font-family: $font-main;
             font-weight: normal;
             font-size: $font-size-md;
+            color: inherit;
 
             a {
-                margin: $space-2 0;
+                display: block;
+                padding: $space-2 0;
                 transition: 0.3s ease;
-            }
-
-            i {
-                transition: 0.3s ease;
+                width: 100%;
+                color: inherit;
+                text-decoration: none;
             }
 
             &:hover {
-                color: red;
-
-                i {
-                    color: red;
-                    transform: rotate(90deg);
-                }
+                color: $color-accent;
 
                 a {
-                    color: red;
+                    color: $color-accent;
                     text-decoration: underline;
                     transform: translateX(4px);
                 }
-            }
-        }
 
-        .active {
-            color: red;
-            border-bottom: 1px solid red;
-
-            i {
-                color: red;
-                transform: rotate(90deg);
+                i,
+                .el-icon {
+                    color: $color-accent;
+                    transform: rotate(90deg);
+                }
             }
 
-            a {
-                color: red;
-                text-decoration: underline;
+            &.active {
+                color: $color-accent;
+                border-bottom: 1px solid $color-accent;
+
+                a,
+                .sidebar-menu__button {
+                    color: $color-accent;
+                    text-decoration: underline;
+                }
             }
         }
     }
+
+    &__button {
+        width: 100%;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: $space-2;
+        padding: 0;
+        margin: $space-2 0;
+        border: none;
+        background: transparent;
+        color: inherit;
+        font: inherit;
+        cursor: pointer;
+        text-align: left;
+        transition: 0.3s ease;
+
+        span {
+            transition: 0.3s ease;
+        }
+
+        .el-icon {
+            flex-shrink: 0;
+            transition: 0.3s ease;
+        }
+
+        &:hover {
+            color: $color-accent;
+            text-decoration: underline;
+
+            span {
+                transform: translateX(4px);
+            }
+        }
+    }
+}
+
+.arrow-rotated {
+    color: $color-accent;
+    transform: rotate(90deg);
 }
 </style>

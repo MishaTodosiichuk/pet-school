@@ -61,7 +61,7 @@ withDefaults(defineProps<{
     .unfounded-content {
         display: flex;
         flex-direction: column;
-        gap: $space-2;
+        gap: $space-4;
     }
 
     span {

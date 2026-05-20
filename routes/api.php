@@ -4,6 +4,7 @@ use App\Http\Controllers\API\ContactController;
 use App\Http\Controllers\API\ImageController;
 use App\Http\Controllers\API\MenuController;
 use App\Http\Controllers\API\NewsController;
+use App\Http\Controllers\API\PageController;
 use App\Http\Controllers\API\PhotoGalleryController;
 use App\Http\Controllers\API\StoreFeedbackController;
 use Illuminate\Support\Facades\Route;
@@ -25,6 +26,8 @@ Route::get('get-contact-info', [ContactController::class, 'getContact'])->name('
 Route::get('random-images', [ImageController::class, 'getRandomImage'])->name('get-random-images');
 
 Route::post('contact-feedback', [StoreFeedbackController::class, 'storeFeedback'])->name('contact-feedback');
+
+Route::get('page-info-by-slug/{slug}', [PageController::class, 'getPageInfoBySlug'])->name('get-page-info-by-slug');
 
 Route::middleware('auth:sanctum')->group(function () {
 

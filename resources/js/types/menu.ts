@@ -1,3 +1,5 @@
+import {PageInfoResponseType, PageInfoType} from "@/types/pageInfo";
+
 export interface MenuItemType {
     title: string,
     slug: string,
@@ -8,6 +10,15 @@ export interface StaticMenuItemType {
     link: string,
 }
 
+export interface MenuPageInfoType {
+    title: string,
+    page: PageInfoType | null
+}
+
 export interface MenuResponseType {
     data: MenuItemType[];
+}
+export interface MenuPageInfoResponseType {
+    title: string
+    page: PageInfoResponseType | null;
 }

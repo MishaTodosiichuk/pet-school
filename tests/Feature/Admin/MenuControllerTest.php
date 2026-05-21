@@ -3,6 +3,7 @@
 namespace Tests\Feature\Admin;
 
 use App\Models\Menu;
+use App\Models\Page;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Tests\TestCase;
@@ -42,12 +43,30 @@ class MenuControllerTest extends TestCase
         $response->assertViewHas(['breadcrumbs', 'formConfig']);
     }
 
-    public function testMenuCanBeCreated(): void
+    public function testEditPageIsDisplayed(): void
     {
+        $page = Page::create(['title' => 'Якась сторінка']);
+        $menu = Menu::factory()->create([
+            'title' => 'Пункт меню',
+            'page_id' => $page->id,
+        ]);
+
+        $response = $this->actingAs($this->admin)->get(route('admin.menus.edit', $menu->id));
+
+        $response->assertOk();
+        $response->assertViewIs('admin.pages.menu.edit');
+        $response->assertViewHas(['menu', 'breadcrumbs', 'formConfig']);
+    }
+
+    public function testMenuCanBeCreatedWithExistingPage(): void
+    {
+        $page = Page::create(['title' => 'Офіційні документи закладу']);
+
         $response = $this->actingAs($this->admin)->post(route('admin.menus.store'), [
-            'title' => 'Footer menu',
+            'title' => 'Статут та ліцензії',
             'slug' => '',
             'parent_id' => null,
+            'page_id' => $page->id,
             'publish' => true,
             'redirect_after' => 'save_and_close',
         ]);
@@ -55,24 +74,79 @@ class MenuControllerTest extends TestCase
         $response->assertRedirect(route('admin.menus.index'));
 
         $this->assertDatabaseHas('menus', [
-            'title' => 'Footer menu',
-            'slug' => 'footer-menu',
+            'title' => 'Статут та ліцензії',
+            'slug' => 'statut-ta-licenziyi',
+            'page_id' => $page->id,
             'publish' => true,
+        ]);
+
+        $this->assertDatabaseHas('pages', [
+            'id' => $page->id,
+            'title' => 'Офіційні документи закладу',
         ]);
     }
 
-    public function testMenuCanBeUpdated(): void
+    public function testMenuCanBeCreatedAsChild(): void
     {
-        $menu = Menu::factory()->create([
-            'title' => 'Old title',
-            'slug' => 'old-title',
+        $parentMenu = Menu::factory()->create([
+            'title' => 'Освітній процес',
+            'slug' => 'osvitniy-proces',
+        ]);
+
+        $page = Page::create(['title' => 'Розклад занять']);
+
+        $response = $this->actingAs($this->admin)->post(route('admin.menus.store'), [
+            'title' => 'Розклад',
+            'slug' => '',
+            'parent_id' => $parentMenu->id,
+            'page_id' => $page->id,
             'publish' => true,
+            'redirect_after' => 'save_and_close',
+        ]);
+
+        $response->assertRedirect(route('admin.menus.index'));
+
+        $this->assertDatabaseHas('menus', [
+            'title' => 'Розклад',
+            'parent_id' => $parentMenu->id,
+            'page_id' => $page->id,
+        ]);
+    }
+
+    public function testMenuCanBeCreatedWithoutPage(): void
+    {
+        $response = $this->actingAs($this->admin)->post(route('admin.menus.store'), [
+            'title' => 'Тільки Категорія',
+            'slug' => '',
+            'parent_id' => null,
+            'page_id' => null,
+            'publish' => true,
+            'redirect_after' => 'save_and_close',
+        ]);
+
+        $response->assertRedirect(route('admin.menus.index'));
+
+        $this->assertDatabaseHas('menus', [
+            'title' => 'Тільки Категорія',
+            'page_id' => null,
+        ]);
+    }
+
+    public function testMenuCanBeUpdatedWithoutChangingPage(): void
+    {
+        $page = Page::create(['title' => 'Контентна сторінка']);
+        $menu = Menu::factory()->create([
+            'title' => 'Стара назва меню',
+            'slug' => 'stara-nazva-menyu',
+            'publish' => true,
+            'page_id' => $page->id,
         ]);
 
         $response = $this->actingAs($this->admin)->patch(route('admin.menus.update', $menu->id), [
-            'title' => 'New title',
-            'slug' => 'new-title',
+            'title' => 'Нова назва меню',
+            'slug' => 'nova-nazva-menyu',
             'parent_id' => null,
+            'page_id' => $page->id,
             'publish' => false,
             'redirect_after' => 'save_and_close',
         ]);
@@ -81,9 +155,14 @@ class MenuControllerTest extends TestCase
 
         $this->assertDatabaseHas('menus', [
             'id' => $menu->id,
-            'title' => 'New title',
-            'slug' => 'new-title',
+            'title' => 'Нова назва меню',
+            'slug' => 'nova-nazva-menyu',
             'publish' => false,
+        ]);
+
+        $this->assertDatabaseHas('pages', [
+            'id' => $page->id,
+            'title' => 'Контентна сторінка',
         ]);
     }
 
@@ -138,5 +217,44 @@ class MenuControllerTest extends TestCase
 
         $this->assertCount(1, $menus);
         $this->assertSame('Header menu', $menus->first()->title);
+    }
+
+    public function testMenuStoreValidationFailsWithoutTitle(): void
+    {
+        $response = $this->actingAs($this->admin)->post(route('admin.menus.store'), [
+            'title' => '',
+            'slug' => '',
+            'parent_id' => null,
+            'publish' => true,
+        ]);
+
+        $response->assertSessionHasErrors(['title']);
+        $this->assertDatabaseCount('menus', 0);
+    }
+
+    public function testMenuUpdateValidationFailsWithoutTitle(): void
+    {
+        $menu = Menu::factory()->create(['title' => 'Існуюче меню']);
+
+        $response = $this->actingAs($this->admin)->patch(route('admin.menus.update', $menu->id), [
+            'title' => '',
+            'slug' => 'isnyuche-menyu',
+            'parent_id' => null,
+            'publish' => true,
+        ]);
+
+        $response->assertSessionHasErrors(['title']);
+
+        $this->assertDatabaseHas('menus', [
+            'id' => $menu->id,
+            'title' => 'Існуюче меню',
+        ]);
+    }
+
+    public function testGuestCannotAccessAdminRoutes(): void
+    {
+        $response = $this->get(route('admin.menus.index'));
+
+        $response->assertRedirect('/login');
     }
 }

@@ -13,7 +13,7 @@ class GetGalleryAction
             ->published()
             ->byKey($key)
             ->with('images')
-            ->first();
+            ->firstOrFail();
 
         return new PhotoGalleryResource($gallery);
     }

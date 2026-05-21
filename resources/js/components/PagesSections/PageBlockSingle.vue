@@ -118,11 +118,9 @@ const isPdf = computed(() => {
         color: $color-gray-700;
         line-height: 1.6;
 
-        // Запобігаємо виходу нерозривного тексту за межі контенту
         overflow-wrap: break-word;
         word-break: break-word;
 
-        // Стилізуємо весь динамічний HTML з WYSIWYG
         :deep {
             span {
                 overflow-wrap: break-word;
@@ -140,7 +138,6 @@ const isPdf = computed(() => {
                 margin-top: $space-1;
             }
 
-            // Марковані списки
             ul {
                 list-style-type: disc;
                 margin-left: $space-5;
@@ -152,7 +149,6 @@ const isPdf = computed(() => {
                 }
             }
 
-            // Нумеровані списки
             ol {
                 list-style-type: decimal;
                 margin-left: $space-5;

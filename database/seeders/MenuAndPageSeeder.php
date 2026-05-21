@@ -9,7 +9,7 @@ use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Str;
 
-class MenuSeeder extends Seeder
+class MenuAndPageSeeder extends Seeder
 {
     /**
      * Run the database seeds.
@@ -130,19 +130,133 @@ class MenuSeeder extends Seeder
         ];
 
         foreach ($data as $parentTitle => $children) {
-            $parent = Menu::create([
-                'title' => $parentTitle,
-                'slug'  => Str::slug($parentTitle),
+            $parentPageId = null;
+            if (empty($children)) {
+                $parentPageId = $this->generatePageWithBlocks($parentTitle);
+            }
+
+            $parent = Menu::query()->create([
+                'title'   => $parentTitle,
+                'slug'    => Str::slug($parentTitle),
+                'publish' => true,
+                'page_id' => $parentPageId,
             ]);
 
             if (!empty($children)) {
                 foreach ($children as $childTitle) {
+                    $childPageId = $this->generatePageWithBlocks($childTitle);
+
                     $parent->children()->create([
-                        'title' => $childTitle,
-                        'slug'  => Str::slug($childTitle),
+                        'title'   => $childTitle,
+                        'slug'    => Str::slug($childTitle),
+                        'publish' => true,
+                        'page_id' => $childPageId,
                     ]);
                 }
             }
         }
+    }
+
+    private function generatePageWithBlocks(string $title): int
+    {
+        $page = Page::query()->create([
+            'title' => $title
+        ]);
+
+        $slugLower = Str::lower($title);
+
+        if (
+            Str::contains($slugLower, ['статут', 'ліцензі', 'звіт', 'кошторис', 'паспорт', 'документ', 'положення'])
+        ) {
+            PageBlock::query()->create([
+                'page_id'    => $page->id,
+                'title'      => 'Офіційний електронний документ',
+                'text'       => '<p>Ознайомтеся із затвердженою копією документа нижче. Ви можете завантажити його або переглянути безпосередньо у вікні браузера.</p>',
+                'file'       => '/uploads/documents/sample.pdf',
+                'publish'    => true,
+                'sort_order' => 1,
+            ]);
+            return $page->id;
+        }
+
+        if (Str::contains($slugLower, ['адміністрація', 'кадр', 'склад', 'розклад', 'критерії', 'забезпечення'])) {
+            PageBlock::query()->create([
+                'page_id'    => $page->id,
+                'title'      => 'Інформаційна таблиця: ' . $title,
+                'text'       => '<p>Нижче наведено структуровані актуальні дані у вигляді таблиці:</p>
+                                <table class="table table-bordered">
+                                    <thead>
+                                        <tr>
+                                            <th>№ п/п</th>
+                                            <th>Найменування / ПІБ</th>
+                                            <th>Основна інформація</th>
+                                            <th>Примітка</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr><td>1</td><td>Елемент таблиці А</td><td>Детальний опис першого пункту даних</td><td>Актуально</td></tr>
+                                        <tr><td>2</td><td>Елемент таблиці Б</td><td>Детальний опис другого пункту даних</td><td>Внесено зміни</td></tr>
+                                        <tr><td>3</td><td>Елемент таблиці В</td><td>Детальний опис третього пункту даних</td><td>Архів</td></tr>
+                                    </tbody>
+                                </table>',
+                'file'       => null,
+                'publish'    => true,
+                'sort_order' => 1,
+            ]);
+            return $page->id;
+        }
+
+        if (Str::contains($slugLower, ['правила', 'програм', 'рекомендації', 'перелік', 'умови', 'поради', 'інструкці'])) {
+            PageBlock::query()->create([
+                'page_id'    => $page->id,
+                'title'      => 'Перелік та основні вимоги',
+                'text'       => '<p>Для детального ознайомлення з вимогами, будь ласка, зверніть увагу на наступні пункти:</p>
+                                <ol>
+                                    <li>Першочергові заходи та організаційні положення процесу.</li>
+                                    <li>Затверджені нормативи згідно з чинним законодавством України.</li>
+                                    <li>Додаткові умови, що діють безпосередньо на базі нашого закладу освіти.</li>
+                                </ol>
+                                <p>У разі виникнення додаткових питань, ви можете звернутися за роз’ясненнями у відповідні структурні підрозділи.</p>',
+                'file'       => null,
+                'publish'    => true,
+                'sort_order' => 1,
+            ]);
+            return $page->id;
+        }
+
+        if (crc32($title) % 2 === 0) {
+            PageBlock::query()->create([
+                'page_id'    => $page->id,
+                'title'      => 'Загальні відомості',
+                'text'       => '<p>Короткий опис сторінки "' . $title . '". Тут розміщено лаконічну інформацію для ознайомлення.</p>',
+                'file'       => null,
+                'publish'    => true,
+                'sort_order' => 1,
+            ]);
+        } else {
+            PageBlock::query()->create([
+                'page_id'    => $page->id,
+                'title'      => 'Вступна частина',
+                'text'       => '<p>Це перший довгий блок інформації. Тут детально розписуються передумови, загальна мета, завдання та сфера застосування наданих матеріалів.</p><p>Ми постійно оновлюємо дані, щоб вони відповідали поточним вимогам Міністерства освіти і науки України.</p>',
+                'file'       => null,
+                'publish'    => true,
+                'sort_order' => 1,
+            ]);
+
+            PageBlock::query()->create([
+                'page_id'    => $page->id,
+                'title'      => 'Додаткові матеріали та положення',
+                'text'       => '<p>Другий блок сторінки. Він містить розширений аналіз та коментарі експертів нашої методичної ради.</p>
+                                <ul>
+                                    <li>Важливий підпункт додаткових положень №1.</li>
+                                    <li>Важливий підпункт додаткових положень №2.</li>
+                                </ul>',
+                'file'       => null,
+                'publish'    => true,
+                'sort_order' => 2,
+            ]);
+        }
+
+        return $page->id;
     }
 }

@@ -45,9 +45,19 @@ class NewsControllerTest extends TestCase
         $response->assertViewHas(['breadcrumbs', 'formConfig']);
     }
 
+    public function testEditPageIsDisplayed(): void
+    {
+        $news = News::factory()->create();
+
+        $response = $this->actingAs($this->admin)->get(route('admin.news.edit', $news->id));
+
+        $response->assertOk();
+        $response->assertViewIs('admin.pages.news.edit');
+        $response->assertViewHas(['news', 'breadcrumbs', 'formConfig']);
+    }
+
     public function testNewsCanBeCreated(): void
     {
-
         $response = $this->actingAs($this->admin)->post(route('admin.news.store'), [
             'title' => 'Footer news',
             'slug' => '',
@@ -145,6 +155,7 @@ class NewsControllerTest extends TestCase
         $this->assertCount(1, $news);
         $this->assertSame('Header news', $news->first()->title);
     }
+
     public function testNewsCanBeCreatedWithImage(): void
     {
         Storage::fake('public');
@@ -165,11 +176,9 @@ class NewsControllerTest extends TestCase
         $news = News::query()->where('slug', 'news-with-image')->first();
 
         $this->assertNotNull($news);
-
         $this->assertDatabaseCount('images', 1);
 
         $image = Image::query()->first();
-
         $this->assertNotNull($image);
 
         $this->assertDatabaseHas('image_news', [
@@ -224,6 +233,7 @@ class NewsControllerTest extends TestCase
             str_replace('/storage/', '', $image->url)
         );
     }
+
     public function testExistingImageCanBeAttachedToNews(): void
     {
         Storage::fake('public');
@@ -256,5 +266,79 @@ class NewsControllerTest extends TestCase
         ]);
 
         $this->assertCount(1, $news->images);
+    }
+
+    public function testImagesCanBeDetachedFromNews(): void
+    {
+        Storage::fake('public');
+
+        $news = News::factory()->create();
+        $image1 = Image::factory()->create();
+        $image2 = Image::factory()->create();
+
+        $news->images()->attach([$image1->id, $image2->id]);
+        $this->assertCount(2, $news->images);
+
+        $response = $this->actingAs($this->admin)->patch(route('admin.news.update', $news->id), [
+            'title' => $news->title,
+            'slug' => $news->slug,
+            'description' => $news->description,
+            'publish' => $news->publish,
+            'images' => [$image1->id],
+            'redirect_after' => 'save_and_close',
+        ]);
+
+        $response->assertRedirect(route('admin.news.index'));
+
+        $this->assertDatabaseHas('image_news', ['news_id' => $news->id, 'image_id' => $image1->id]);
+        $this->assertDatabaseMissing('image_news', ['news_id' => $news->id, 'image_id' => $image2->id]);
+        $this->assertCount(1, $news->fresh()->images);
+    }
+
+    public function testPublishedScopeReturnsOnlyPublishedNews(): void
+    {
+        News::factory()->create(['publish' => true]);
+        News::factory()->create(['publish' => false]);
+
+        $publishedNews = News::published()->get();
+
+        $this->assertCount(1, $publishedNews);
+        $this->assertTrue((bool)$publishedNews->first()->publish);
+    }
+
+    public function testNewsStoreValidationFailsWithoutRequiredFields(): void
+    {
+        $response = $this->actingAs($this->admin)->post(route('admin.news.store'), [
+            'title' => '',
+            'description' => '',
+        ]);
+
+        $response->assertSessionHasErrors(['title']);
+        $this->assertDatabaseCount('news', 0);
+    }
+
+    public function testNewsUpdateValidationFailsWithoutTitle(): void
+    {
+        $news = News::factory()->create(['title' => 'Початкова новина']);
+
+        $response = $this->actingAs($this->admin)->patch(route('admin.news.update', $news->id), [
+            'title' => '',
+            'description' => 'Новий опис',
+        ]);
+
+        $response->assertSessionHasErrors(['title']);
+
+        $this->assertDatabaseHas('news', [
+            'id' => $news->id,
+            'title' => 'Початкова новина',
+        ]);
+    }
+
+    public function testGuestCannotAccessNewsAdminRoutes(): void
+    {
+        $news = News::factory()->create();
+        $this->get(route('admin.news.index'))->assertRedirect('/login');
+        $this->post(route('admin.news.store'), [])->assertRedirect('/login');
+        $this->delete(route('admin.news.destroy', $news->id))->assertRedirect('/login');
     }
 }

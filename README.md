@@ -55,7 +55,7 @@ Create a database and add the required variables to the `.env` file.
 ```bash
 sail artisan migrate --seed
 
-sail artisan db:seed --class=MenuSeeder
+sail artisan db:seed --class=MenuAndPageSeeder
 ```
 
 ## Run Vite

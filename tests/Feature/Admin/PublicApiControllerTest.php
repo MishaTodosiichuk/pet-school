@@ -256,8 +256,8 @@ class PublicApiControllerTest extends TestCase
     public function test_store_contact_feedback_saves_data_and_validates(): void
     {
         $feedbackData = [
-            'name' => 'Михайло',
-            'email' => 'mihailo@example.com',
+            'name' => 'Test',
+            'email' => 'test@example.com',
             'phone' => '+380990000000',
             'message' => 'Мене цікавить співпраця.',
             'captcha' => 'valid-captcha-string',
@@ -272,8 +272,8 @@ class PublicApiControllerTest extends TestCase
         $response->assertStatus($response->getStatusCode() === 201 ? 201 : 200);
 
         $this->assertDatabaseHas('store_feedbacks', [
-            'email' => 'mihailo@example.com',
-            'name' => 'Михайло'
+            'email' => 'test@example.com',
+            'name' => 'Test'
         ]);
     }
 

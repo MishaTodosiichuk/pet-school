@@ -43,13 +43,10 @@ const handleItemClick = () => {
 }
 
 watch(
-    () => [props.block.text, props.block.filePath, props.isOpened],
+    () => [props.block.text, props.block.filePath],
     async () => {
         await nextTick()
-
-        if (!props.isOpened) {
-            checkTruncation()
-        }
+        checkTruncation()
     }
 )
 
@@ -63,50 +60,6 @@ onMounted(async () => {
 onBeforeUnmount(() => {
     window.removeEventListener('resize', handleResize)
 })
-
-const beforeEnter = (el: Element) => {
-    const element = el as HTMLElement
-
-    element.style.height = '0'
-    element.style.opacity = '0'
-    element.style.overflow = 'hidden'
-}
-
-const enter = async (el: Element) => {
-    const element = el as HTMLElement
-
-    await nextTick()
-
-    element.style.transition = 'height 0.35s ease, opacity 0.25s ease'
-    element.style.height = `${element.scrollHeight}px`
-    element.style.opacity = '1'
-
-    const onTransitionEnd = () => {
-        element.style.height = 'auto'
-        element.style.overflow = ''
-        element.removeEventListener('transitionend', onTransitionEnd)
-    }
-
-    element.addEventListener('transitionend', onTransitionEnd)
-}
-
-const beforeLeave = (el: Element) => {
-    const element = el as HTMLElement
-
-    element.style.height = `${element.scrollHeight}px`
-    element.style.opacity = '1'
-    element.style.overflow = 'hidden'
-}
-
-const leave = (el: Element) => {
-    const element = el as HTMLElement
-
-    requestAnimationFrame(() => {
-        element.style.transition = 'height 0.3s ease, opacity 0.2s ease'
-        element.style.height = '0'
-        element.style.opacity = '0'
-    })
-}
 </script>
 
 <template>
@@ -135,52 +88,55 @@ const leave = (el: Element) => {
                 </button>
             </div>
 
-            <div
-                v-if="!isOpened && block.text"
-                ref="textRef"
-                class="page-blocks__info-description"
-                v-html="block.text"
-            />
-
-            <span
-                v-if="block.published"
-                class="date"
-            >
-                {{ block.published }}
-            </span>
-
-            <Transition
-                @before-enter="beforeEnter"
-                @enter="enter"
-                @before-leave="beforeLeave"
-                @leave="leave"
-            >
+            <div class="page-blocks__main-container">
                 <div
-                    v-if="isOpened"
-                    class="page-blocks__collapse"
-                    @click.stop
+                    class="page-blocks__preview-wrapper"
+                    :class="{ 'page-blocks__preview-wrapper--hidden': isOpened }"
                 >
-                    <div class="page-blocks__full-content">
+                    <div class="page-blocks__preview-content">
                         <div
                             v-if="block.text"
-                            class="full-text"
+                            ref="textRef"
+                            class="page-blocks__info-description"
                             v-html="block.text"
                         />
+                    </div>
+                </div>
 
-                        <div
-                            v-if="block.filePath"
-                            class="pdf-container"
-                        >
-                            <iframe
-                                :src="`${block.filePath}#toolbar=0`"
-                                width="100%"
-                                height="600"
-                                frameborder="0"
+                <div
+                    class="page-blocks__collapse-wrapper"
+                    :class="{ 'page-blocks__collapse-wrapper--expanded': isOpened }"
+                >
+                    <div class="page-blocks__collapse-inner">
+                        <div class="page-blocks__full-content">
+                            <div
+                                v-if="block.text"
+                                class="full-text"
+                                v-html="block.text"
                             />
+
+                            <div
+                                v-if="block.filePath"
+                                class="pdf-container"
+                            >
+                                <iframe
+                                    :src="`${block.filePath}#toolbar=0`"
+                                    width="100%"
+                                    height="600"
+                                    frameborder="0"
+                                />
+                            </div>
                         </div>
                     </div>
                 </div>
-            </Transition>
+
+                <span
+                    v-if="block.published"
+                    class="date"
+                >
+                    {{ block.published }}
+                </span>
+            </div>
         </div>
     </div>
 </template>
@@ -193,7 +149,8 @@ const leave = (el: Element) => {
         border-radius: 8px;
         padding: $space-2;
         cursor: pointer;
-        transition: background 0.3s ease, box-shadow 0.3s ease;
+        transition: background 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+        box-shadow 0.3s cubic-bezier(0.25, 1, 0.5, 1);
 
         &:not(.page-blocks__item--disabled):hover {
             box-shadow: $shadow-lg;
@@ -221,6 +178,64 @@ const leave = (el: Element) => {
         align-items: center;
         gap: $space-3;
         width: 100%;
+    }
+
+    &__main-container {
+        display: flex;
+        flex-direction: column;
+        width: 100%;
+    }
+
+    &__preview-wrapper {
+        display: grid;
+        grid-template-rows: 1fr;
+        transition: grid-template-rows 0.38s cubic-bezier(0.4, 0, 0.2, 1);
+
+        .page-blocks__preview-content {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.25s ease, transform 0.28s cubic-bezier(0.4, 0, 0.2, 1);
+        }
+
+        &--hidden {
+            grid-template-rows: 0fr;
+
+            .page-blocks__preview-content {
+                opacity: 0;
+                transform: translateY(-8px);
+                pointer-events: none;
+            }
+        }
+    }
+
+    &__preview-content {
+        overflow: hidden;
+    }
+
+    &__collapse-wrapper {
+        display: grid;
+        grid-template-rows: 0fr;
+        transition: grid-template-rows 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+
+        .page-blocks__full-content {
+            opacity: 0;
+            transform: translateY(15px);
+            transition: opacity 0.35s cubic-bezier(0.25, 1, 0.5, 1),
+            transform 0.42s cubic-bezier(0.25, 1, 0.5, 1);
+        }
+
+        &--expanded {
+            grid-template-rows: 1fr;
+
+            .page-blocks__full-content {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    }
+
+    &__collapse-inner {
+        overflow: hidden;
     }
 
     &__info {
@@ -254,6 +269,7 @@ const leave = (el: Element) => {
             color: $color-gray-700;
             overflow-wrap: break-word;
             word-break: break-word;
+            padding-bottom: $space-1;
 
             :deep(span) {
                 overflow-wrap: break-word;
@@ -261,23 +277,20 @@ const leave = (el: Element) => {
             }
 
             :deep(p) {
-                margin: 0;
+                margin-bottom: $space-3;
                 padding: 0;
             }
         }
     }
 
-    &__collapse {
-        width: 100%;
-        overflow: hidden;
-        will-change: height, opacity;
-    }
-
     &__full-content {
-        padding: $space-3 0;
         display: flex;
         flex-direction: column;
         gap: $space-4;
+        width: 100%;
+        padding-top: $space-2;
+        padding-bottom: $space-2;
+        will-change: transform, opacity;
 
         .full-text {
             font-size: $font-size-md;
@@ -338,7 +351,8 @@ const leave = (el: Element) => {
                     border-radius: 4px;
                     overflow: hidden;
 
-                    th, td {
+                    th,
+                    td {
                         border: 1px solid $color-gray-300;
                         padding: $space-3 $space-4;
                         text-align: left;
@@ -374,7 +388,8 @@ const leave = (el: Element) => {
     background: none;
     color: $color-gray-500;
     cursor: pointer;
-    transition: color 0.3s ease, transform 0.3s ease;
+    transition: color 0.3s cubic-bezier(0.25, 1, 0.5, 1),
+    transform 0.38s cubic-bezier(0.25, 1, 0.5, 1);
 
     &--rotated {
         color: $color-accent;
@@ -387,11 +402,13 @@ const leave = (el: Element) => {
     color: $color-gray-500;
     font-style: italic;
     transition: color 0.3s ease;
+    align-self: flex-start;
+    margin-top: $space-2;
 }
 
 .pdf-container {
     width: 100%;
-    margin-top: $space-3;
+    margin-top: $space-2;
     border-radius: 6px;
     overflow: hidden;
     background: #e4e4e7;

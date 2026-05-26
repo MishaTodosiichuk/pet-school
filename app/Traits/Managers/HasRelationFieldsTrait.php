@@ -61,7 +61,7 @@ trait HasRelationFieldsTrait
             'multiple' => $isMultiple,
             'column' => $column,
             'value' => $isMultiple
-                ? old($keyName, $model->exists ? $relation->get()->modelKeys() : []) // Оптимізовано отримання ID моделей
+                ? old($keyName, $model->exists ? $relation->get()->modelKeys() : [])
                 : old($keyName, $model->$keyName),
         ];
 

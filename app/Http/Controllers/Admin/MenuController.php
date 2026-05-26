@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Admin;
 
 use App\Actions\Menu\CrudMenuAction;
+use App\Actions\Menu\GetMenuPageInfoAction;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Menu\StoreRequest;
 use App\Http\Requests\Menu\UpdateRequest;
@@ -60,13 +61,15 @@ class MenuController extends Controller
     /**
      * Show the form for editing the specified resource.
      */
-    public function edit(Menu $menu)
+    public function edit(Menu $menu, GetMenuPageInfoAction $action)
     {
         $breadcrumbs = $this->integrateManagerMenu->getBreadcrumbs('edit', $menu);
 
         $formConfig = $this->integrateManagerMenu->getFormConfig('patch', $menu);
 
-        return view('admin.pages.menu.edit', compact('menu', 'breadcrumbs', 'formConfig'));
+        $redirect = $action->handle($menu);
+
+        return view('admin.pages.menu.edit', compact('menu', 'breadcrumbs', 'formConfig', 'redirect'));
     }
 
     /**

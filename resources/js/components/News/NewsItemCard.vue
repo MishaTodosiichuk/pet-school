@@ -11,23 +11,23 @@ withDefaults(defineProps<{
 <template>
     <RouterLink v-if="news" class="news-item" :to="`news/${news.slug}`">
         <div class="news-item__image">
+
             <img
                 loading="lazy"
-                :src="news.image.url"
-                :alt="news.image.alt"
-                :width="news.image.width"
-                :height="news.image.height">
+                :src="news?.image?.url"
+                :alt="news?.image?.alt"
+                :width="news?.image?.width"
+                :height="news?.image?.height">
         </div>
 
         <div class="news-item__info">
             <h3>
-                {{ news.title }}
+                {{ news?.title }}
             </h3>
-            <div class="news-item__info-description">
-                {{ news.description }}
+            <div class="news-item__info-description" v-html="news?.description">
             </div>
             <span>
-                {{ news.published }}
+                {{ news?.published }}
             </span>
         </div>
     </RouterLink>

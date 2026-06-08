@@ -1,15 +1,12 @@
 <script setup lang="ts">
 import NewsList from "@/components/News/NewsList.vue";
+import {NewsItemType} from "@/types/news";
 
-defineProps({
-    withTitle: {
-        type: Boolean,
-        default: true
-    },
-    news: {
-        type: Array,
-        required: true
-    }
+withDefaults(defineProps<{
+    withTitle?: boolean,
+    news: NewsItemType[] | null
+}>(), {
+    withTitle: true,
 })
 </script>
 

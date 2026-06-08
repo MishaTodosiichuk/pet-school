@@ -15,6 +15,8 @@ class GetNewsAction
     {
         $news = News::query()
             ->published()
+            ->with('images')
+            ->orderBy('created_at', 'desc')
             ->paginate(10);
 
         return NewsResource::collection($news);

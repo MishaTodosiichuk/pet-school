@@ -25,8 +25,8 @@ class UpdateRequest extends FormRequest
         $contactId = $this->route('contact')->id ?? $this->route('contact');
 
         return [
-            'code_edrpou'      => ['required','string','max:10','min:10', 'unique:contacts,code_edrpou' . $contactId],
-            'zip_code'         => ['required', 'string', 'max:10', 'min:10'],
+            'code_edrpou'      => ['required','string','max:10','min:5', 'unique:contacts,code_edrpou' . $contactId],
+            'zip_code'         => ['required', 'string', 'max:10', 'min:5'],
             'address'          => ['required','string','max:150', 'min:10'],
             'schedule'         => ['required','string','max:100', 'min:5'],
             'email'            => ['required','string','max:100', 'min:5', 'email'],

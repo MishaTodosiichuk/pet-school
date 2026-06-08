@@ -34,12 +34,12 @@ const routes: RouteRecordRaw[] = [
     {
         path: '/:pathMatch(.*)*',
         name: 'not-found',
-        component: import('@/pages/NotFound.vue'),
+        component: () => import('@/pages/NotFound.vue'),
     }
 ];
 
 const router = createRouter({
-    history: createWebHistory(import.meta.env.BASE_URL),
+    history: createWebHistory('/'),
     routes,
     scrollBehavior(to, from, savedPosition) {
         if (savedPosition) {

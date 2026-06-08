@@ -14,13 +14,15 @@ class NewsResource extends JsonResource
      */
     protected function baseData(): array
     {
+        $firstImage = $this->images->first();
+
         return [
-            'title' => $this->title,
+            'title'       => $this->title,
             'description' => $this->description,
-            'slug' => $this->slug,
-            'viewsCount' => $this->views_count,
-            'published' => $this->created_at->format('d.m.Y H:i'),
-            'image' => new ImageResource($this->images[0]),
+            'slug'        => $this->slug,
+            'viewsCount'  => $this->views_count,
+            'published'   => $this->created_at ? $this->created_at->format('d.m.Y H:i') : null,
+            'image'       => $firstImage ? new ImageResource($firstImage) : null,
         ];
     }
 

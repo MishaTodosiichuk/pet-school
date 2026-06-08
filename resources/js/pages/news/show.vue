@@ -87,8 +87,8 @@ onMounted(async () => {
 
             <section class="section news-page__image">
                 <img
-                    :src="singleNews?.image.url"
-                    :alt="singleNews?.image.alt"
+                    :src="singleNews?.image?.url"
+                    :alt="singleNews?.image?.alt"
                 >
             </section>
 

@@ -1,41 +1,16 @@
 import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router';
+import {appRoutes} from "@/modules/app/routes";
+import {newsRoutes} from "@/modules/news/routes";
+import {galleryRoutes} from "@/modules/gallery/routes";
+import {contactRoutes} from "@/modules/contact/routes";
+import {infoPageRoutes} from "@/modules/infoPage/routes";
 
 const routes: RouteRecordRaw[] = [
-    {
-        path: '/',
-        name: 'home',
-        component: () => import('@/pages/home/index.vue')
-    },
-    {
-        path: '/news',
-        name: 'news',
-        component: () => import('@/pages/news/index.vue')
-    },
-    {
-        path: '/news/:slug',
-        name: 'news-show',
-        component: () => import('@/pages/news/show.vue')
-    },
-    {
-        path: '/gallery',
-        name: 'gallery',
-        component: () => import('@/pages/gallery/index.vue')
-    },
-    {
-        path: '/contacts',
-        name: 'contacts',
-        component: () => import('@/pages/contacts/index.vue')
-    },
-    {
-        path: '/page/:slug',
-        name: 'page',
-        component: () => import('@/pages/page-info/show.vue')
-    },
-    {
-        path: '/:pathMatch(.*)*',
-        name: 'not-found',
-        component: () => import('@/pages/NotFound.vue'),
-    }
+    ...appRoutes,
+    ...newsRoutes,
+    ...galleryRoutes,
+    ...contactRoutes,
+    ...infoPageRoutes,
 ];
 
 const router = createRouter({

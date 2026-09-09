@@ -1,10 +1,11 @@
 <script setup lang="ts">
 import {storeToRefs} from "pinia";
 import {computed, onMounted, ref, watch} from "vue";
-import {usePageStore} from "@/stores/pageStore";
+import {usePageStore} from "@/modules/infoPage/stores/pageStore";
 import {useRoute} from "vue-router";
-import PageBlockAccordionItem from "@/components/PagesSections/PageBlockAccordionItem.vue";
-import PageBlockSingle from "@/components/PagesSections/PageBlockSingle.vue";
+import {PageBlockAccordionItem} from "@/modules/infoPage/components";
+import {PageBlockSingle} from "@/modules/infoPage/components";
+import {BaseLine, BaseSection} from "@/modules/app/components";
 
 const pageStore = usePageStore();
 const route = useRoute();
@@ -40,13 +41,11 @@ watch(
 </script>
 
 <template>
-    <section class="section">
-        <div class="home-page">
-            <h1 class="heading-line">{{ pageInfo?.title }}</h1>
-        </div>
-    </section>
+    <BaseSection>
+        <h1 class="heading-line">{{ pageInfo?.title }}</h1>
+    </BaseSection>
 
-    <section>
+    <BaseSection>
         <PageBlockSingle v-if="blocks.length <= 1" :blocks="blocks"/>
 
         <div v-else class="page-blocks">
@@ -56,25 +55,15 @@ watch(
                     :is-opened="openedBlockId === block.id"
                     @toggle="toggleBlock(block.id)"
                 />
-                <div class="hr"></div>
+                <BaseLine />
             </template>
         </div>
-    </section>
+    </BaseSection>
 </template>
 
 <style scoped lang="scss">
 .page-blocks {
     display: flex;
     flex-direction: column;
-
-    .hr {
-        margin: $space-5 0;
-        height: 1px;
-        background: $color-gray-300;
-
-        @media (max-width: $breakpoint-md) {
-            margin: $space-3 0;
-        }
-    }
 }
 </style>

@@ -13,11 +13,6 @@ use Illuminate\Http\Resources\Json\AnonymousResourceCollection;
 
 class NewsController extends Controller
 {
-    public function getNews(GetNewsAction $action): AnonymousResourceCollection
-    {
-        return $action->handle();
-    }
-
     public function index(GetNewsAction $action, FilterRequest $request): AnonymousResourceCollection
     {
         return $action->allNews($request->validated());

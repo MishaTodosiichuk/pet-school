@@ -1,12 +1,9 @@
 <script setup lang="ts">
-import TheHeader from "@/components/layouts/TheHeader.vue";
-import TheSidebar from "@/components/layouts/TheSidebar.vue";
-import TheMainContent from "@/components/layouts/TheMainContent.vue";
-import TheFooter from "@/components/layouts/TheFooter.vue";
-import BackToTop from "@/components/BackToTop.vue";
-import FixedMainMenu from "@/components/Modals/FixedMainMenu.vue";
-import SideMenuModal from "@/components/Modals/SideMenuModal.vue";
-import Loader from "@/components/Loader.vue";
+import {TheSidebar} from "@/modules/menu/components";
+import {TheMainContent, TheFooter, TheHeader} from "@/modules/app/layouts";
+import {FixedMainMenu, SideMenuModal} from "@/modules/menu/components";
+import {BackToTop, Loader} from "@/modules/app/components";
+
 </script>
 
 <template>
@@ -19,7 +16,7 @@ import Loader from "@/components/Loader.vue";
                 <TheMainContent/>
                 <FixedMainMenu/>
                 <SideMenuModal/>
-                <Loader />
+                <Loader/>
             </div>
         </div>
         <BackToTop/>
@@ -199,13 +196,6 @@ p {
     }
 }
 
-.section {
-    padding: $space-4 0;
-
-    @media (max-width: $breakpoint-md) {
-        padding: $space-2 0;
-    }
-}
 
 .bg-image {
     background-image: url('/images/body/bg-image.jpeg');

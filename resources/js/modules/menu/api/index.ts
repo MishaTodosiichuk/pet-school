@@ -1,0 +1,1 @@
+export { apiMenus } from './menu'

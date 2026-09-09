@@ -1,8 +1,9 @@
 <script setup lang="ts">
-import {useGalleryStore} from "@/stores/galleryStore";
+import {useGalleryStore} from "@/modules/gallery/stores/galleryStore";
 import {storeToRefs} from "pinia";
 import {onMounted} from "vue";
-import GridImages from "@/components/GridImages.vue";
+import {GridImages} from "@/modules/image/components";
+import {BaseSection} from "@/modules/app/components";
 
 const galleryStore = useGalleryStore()
 
@@ -14,14 +15,12 @@ onMounted(async () => {
 </script>
 
 <template>
-    <section class="section">
-        <div class="home-page">
-            <h1 class="heading-line">Фотогалерея</h1>
-        </div>
-    </section>
-    <section class="section">
+    <BaseSection>
+        <h1 class="heading-line">Фотогалерея</h1>
+    </BaseSection>
+    <BaseSection>
         <GridImages :images="pageGallery?.images ?? []"/>
-    </section>
+    </BaseSection>
 </template>
 
 <style scoped lang="scss">

@@ -21,11 +21,13 @@ class PhotoGallerySeeder extends Seeder
         $mainSlider = PhotoGallery::factory()->create([
             'title' => 'Головний слайдер',
             'key' => 'main_slider',
+            'publish' => true
         ]);
 
         $pageSlider = PhotoGallery::factory()->create([
             'title' => 'Слайдер на сторінці галерея',
             'key' => 'page_gallery',
+            'publish' => true
         ]);
 
         $mainImages = Image::factory()->count(5)->create();

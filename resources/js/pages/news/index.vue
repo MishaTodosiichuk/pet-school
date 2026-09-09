@@ -1,42 +1,38 @@
 <script setup lang="ts">
-import {useNewsStore} from "@/stores/newsStore";
 import {storeToRefs} from "pinia";
 import {onMounted} from "vue";
-
-import NewsSection from "@/components/PagesSections/NewsSection.vue";
-import Datepicker from "@/components/forms/inputs/datepicker.vue";
-import Pagination from "@/components/Pagination.vue";
+import {useNewsStore} from "@/modules/news/stores";
+import {NewsSection} from "@/modules/news/components";
+import {BaseSection, Datepicker, Pagination} from "@/modules/app/components";
 
 const newsStore = useNewsStore()
 
-const {allNews} = storeToRefs(newsStore)
+const {news} = storeToRefs(newsStore)
 
 const fetchNews = async (page = 1, append = false, dates = null) => {
-    await newsStore.getNewsAll(page, append, dates)
+    await newsStore.getNews(page, append, dates)
 }
 
-onMounted(async () =>{
+onMounted(async () => {
     await fetchNews()
 })
 </script>
 
 <template>
-    <section class="section">
-        <div class="home-page">
-            <h1 class="heading-line">Новини</h1>
-        </div>
-    </section>
-    <Datepicker
-        :fetch-data="fetchNews"
-    />
-    <NewsSection
-        :with-title="false"
-        :news="allNews"
-    />
-    <Pagination
-        :meta="newsStore.meta"
-        :fetch-data="fetchNews"
-    />
+    <BaseSection>
+        <h1 class="heading-line">Новини</h1>
+        <Datepicker
+            :fetch-data="fetchNews"
+        />
+        <NewsSection
+            :with-title="false"
+            :news="news"
+        />
+        <Pagination
+            :meta="newsStore.meta"
+            :fetch-data="fetchNews"
+        />
+    </BaseSection>
 </template>
 
 <style scoped lang="scss">

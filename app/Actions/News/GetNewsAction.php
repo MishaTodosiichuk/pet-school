@@ -11,12 +11,21 @@ use Illuminate\Support\Facades\Cache;
 
 class GetNewsAction
 {
-    public function handle(): AnonymousResourceCollection
+    public function allNews(array $filters = []): AnonymousResourceCollection
     {
         $news = News::query()
             ->published()
             ->with('images')
-            ->orderBy('created_at', 'desc')
+            ->when(
+                !empty($filters['start-date']) && !empty($filters['end-date']),
+                function ($query) use ($filters) {
+                    $start = Carbon::parse($filters['start-date'])->startOfDay();
+                    $end = Carbon::parse($filters['end-date'])->endOfDay();
+
+                    $query->whereBetween('created_at', [$start, $end]);
+                }
+            )
+            ->latest()
             ->paginate(10);
 
         return NewsResource::collection($news);
@@ -29,22 +38,6 @@ class GetNewsAction
             ->firstOrFail();
 
         return new NewsItemResource($news);
-    }
-
-    public function allNews(array $request): AnonymousResourceCollection
-    {
-        $news = News::query()
-            ->when(!empty($request['start-date']) && !empty($request['end-date']), function ($query) use ($request) {
-                $start = Carbon::parse($request['start-date'])->startOfDay();
-                $end = Carbon::parse($request['end-date'])->endOfDay();
-
-                $query->whereBetween('created_at', [$start, $end]);
-            })
-            ->latest()
-            ->published()
-            ->paginate(10);
-
-        return NewsResource::collection($news);
     }
 
     public function incrementViews(News $news): void

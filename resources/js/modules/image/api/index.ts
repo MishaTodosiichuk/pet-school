@@ -1,0 +1,1 @@
+export { apiImage } from './image'

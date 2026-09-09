@@ -2,49 +2,20 @@
 
 import {useRoute} from "vue-router";
 import {onMounted} from "vue";
-import {useNewsStore} from "@/stores/newsStore";
+import {useNewsStore} from "@/modules/news/stores/";
 import {storeToRefs} from "pinia";
-import GridImages from "@/components/GridImages.vue";
+import {useShare} from "@/modules/news/composables/useShare";
+import {GridImages} from "@/modules/image/components";
+import {BaseSection, BaseLine} from "@/modules/app/components";
 
 const route = useRoute()
 
 const newsStore = useNewsStore()
+const {share} = useShare()
 
 const {singleNews} = storeToRefs(newsStore)
 
 const slug = route.params.slug as string
-
-const share = async (
-    type: 'facebook' | 'telegram' | 'viber' | 'print'
-) => {
-    const url = encodeURIComponent(window.location.href)
-    const title = encodeURIComponent(singleNews.value?.title ?? '')
-
-    if (type === 'facebook') {
-        window.open(
-            `https://www.facebook.com/sharer/sharer.php?u=${url}`,
-            '_blank'
-        )
-    }
-
-    if (type === 'telegram') {
-        window.open(
-            `https://t.me/share/url?url=${url}&text=${title}`,
-            '_blank'
-        )
-    }
-
-    if (type === 'viber') {
-        window.open(
-            `viber://forward?text=${title}%20${url}`,
-            '_blank'
-        )
-    }
-
-    if (type === 'print') {
-        window.print()
-    }
-}
 
 onMounted(async () => {
     await newsStore.getNewsBySlug(slug)
@@ -57,51 +28,59 @@ onMounted(async () => {
 </script>
 
 <template>
-    <div class="section">
+    <BaseSection>
         <div v-if="singleNews" class="news-page">
             <h1 class="heading-line">{{ singleNews?.title }}</h1>
 
-            <section class="section news-page__info">
-                <div>Дата: <span>{{ singleNews?.published }}</span></div>
-                <div>Кількість переглядів: <span>{{ singleNews?.viewsCount }}</span></div>
-                <div class="share">
-                    <button type="button" @click="share('facebook')">
-                        <i class="fab fa-facebook"></i>
-                    </button>
+            <BaseSection>
+                <div class="news-page__info">
+                    <div>Дата: <span>{{ singleNews?.published }}</span></div>
+                    <div>Кількість переглядів: <span>{{ singleNews?.viewsCount }}</span></div>
+                    <div class="share">
+                        <button type="button" @click="share('facebook', singleNews.title)">
+                            <i class="fab fa-facebook"></i>
+                        </button>
 
-                    <button type="button" @click="share('telegram')">
-                        <i class="fab fa-telegram"></i>
-                    </button>
+                        <button type="button" @click="share('telegram', singleNews.title)">
+                            <i class="fab fa-telegram"></i>
+                        </button>
 
-                    <button type="button" @click="share('viber')">
-                        <i class="fab fa-viber"></i>
-                    </button>
+                        <button type="button" @click="share('viber', singleNews.title)">
+                            <i class="fab fa-viber"></i>
+                        </button>
 
-                    <button type="button" @click="share('print')">
-                        <i class="fas fa-print"></i>
-                    </button>
+                        <button type="button" @click="share('print', singleNews.title)">
+                            <i class="fas fa-print"></i>
+                        </button>
+                    </div>
                 </div>
-            </section>
+            </BaseSection>
 
-            <div class="hr"></div>
+            <BaseLine />
 
-            <section class="section news-page__image">
-                <img
-                    :src="singleNews?.image?.url"
-                    :alt="singleNews?.image?.alt"
-                >
-            </section>
+            <BaseSection>
+                <div class="news-page__image">
+                    <img
+                        :src="singleNews?.image?.url"
+                        :alt="singleNews?.image?.alt"
+                    >
+                </div>
+            </BaseSection>
 
-            <div class="hr"></div>
+            <BaseLine />
 
-            <section class="section news-page__description" v-html="singleNews?.description"></section>
+            <BaseSection>
+                <div class="news-page__description" v-html="singleNews?.description"></div>
+            </BaseSection>
 
-            <div class="hr"></div>
+            <BaseLine />
 
-            <section class="section">
+            <BaseSection>
                 <h2 class="heading-line">Всі фотографії</h2>
+            </BaseSection>
+            <BaseSection>
                 <GridImages :images="singleNews?.images"/>
-            </section>
+            </BaseSection>
         </div>
 
         <div v-else class="news-page skeleton">
@@ -115,22 +94,11 @@ onMounted(async () => {
             <div class="skeleton__text"></div>
             <div class="skeleton__text"></div>
         </div>
-    </div>
+    </BaseSection>
 </template>
 
 <style scoped lang="scss">
 .news-page {
-    .hr {
-        height: 1px;
-        width: 100%;
-        background: $color-gray-200;
-
-        @media (max-width: $breakpoint-md) {
-            margin: $space-3 auto;
-            background: $color-gray-300;
-        }
-    }
-
     &__info {
         display: flex;
         justify-content: space-between;

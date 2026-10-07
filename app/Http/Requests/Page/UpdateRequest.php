@@ -31,7 +31,11 @@ class UpdateRequest extends FormRequest
             'blocks.*.publish'    => ['nullable', 'boolean'],
             'blocks.*.sort_order' => ['nullable', 'integer'],
 
-            'blocks.*.file'       => ['nullable', 'file', 'mimes:pdf,doc,docx,xls,xlsx'],
+            'blocks.*.file' => [
+                'nullable',
+                'file',
+                'extensions:pdf,doc,docx,xls,xlsx',
+            ],
 
             'blocks.*.old_file'   => ['nullable', 'string'],
 
